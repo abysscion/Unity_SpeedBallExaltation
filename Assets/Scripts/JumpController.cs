@@ -78,7 +78,7 @@ public class JumpController : MonoBehaviour
                 return false;
             if (hitRes.transform.CompareTag("RedBarrier"))
             {
-                SceneManager.LoadScene("SampleScene");
+                GameController.RestartLevel();
                 return false;
             }
         }
