@@ -22,57 +22,37 @@ public class JumpController : MonoBehaviour
         _ballStick = GameObject.Find("BallStick");
         _ballStickAnimator = _ballStick.GetComponent<Animator>();
         _ballStickRenderer = _ballStick.GetComponent<MeshRenderer>();
-        _ballStick.transform.Translate(0,0,1.0f);
+        _ballStick.transform.Translate(0, 0, 1.0f);
         _isStick = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
+        _ballStickAnimator.Play("IdleStick");
     }
-    
+
     private void Update()
     {
         _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         // _cameraTransform.position = new Vector3(1.5f, transform.position.y + 0.5f, -4.0f);
-        if (canControlWithMouse)
+        if (Input.touchCount > 0)
         {
-            if (Input.GetMouseButtonDown(0))
+            Touch touch = Input.GetTouch(0);
+            if (_isAlreadyTouched)
             {
-                var hitTag = GetHitTag();
-                switch (hitTag)
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    case null:
-                        ChangeBallState();
-                        break;
-                    case "MetallicBarrier":
-                        StickBall();
-                        _ballStickAnimator.Play("StickRetract");
-                        break;
-                    case "RedBarrier":
-                        //;
-                        break;
+                    _isAlreadyTouched = false;
                 }
+
+                return;
             }
-        }
-        else
-        {
-            if (Input.touchCount > 0)
+
+            if (_isStick)
             {
-                Touch touch = Input.GetTouch(0);
-                if (_isAlreadyTouched)
-                {
-                    if (touch.phase == TouchPhase.Ended)
-                    {
-                        _isAlreadyTouched = false;
-                    }
-                    return;
-                }
-                if (_isStick)
-                {
-                    PrepareToJump(touch);
-                }
-                else
-                {
-                    PrepareToStick(touch);
-                }
+                PrepareToJump(touch);
+            }
+            else
+            {
+                PrepareToStick(touch);
             }
         }
     }
@@ -84,43 +64,6 @@ public class JumpController : MonoBehaviour
         _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
     }
 
-    private void ChangeBallState()
-    {
-        if (_isStick)
-        {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-            Jump(10.0f);
-        }
-        else
-        {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
-            var newPos = this.transform.position;
-            newPos += Vector3.forward;
-            _ballStick.transform.position = newPos;
-            _ballStick.SetActive(true);
-        }
-
-        _isStick = !_isStick;
-    }
-
-    private bool CheckIfAbleToStick()
-    {
-        if (canDrawDebug)
-            Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
-
-        if (Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
-        {
-            if (hitRes.transform.CompareTag("MetallicBarrier"))
-                return false;
-            if (hitRes.transform.CompareTag("RedBarrier"))
-            {
-                GameController.RestartLevel();
-                return false;
-            }
-        }
-        return true;
-    }
-    
     private string GetHitTag()
     {
         if (canDrawDebug)
@@ -131,10 +74,10 @@ public class JumpController : MonoBehaviour
             return "MetallicBarrier";
         if (hitRes.transform.CompareTag("RedBarrier"))
             return "RedBarrier";
-        
+
         return null;
     }
-    
+
     private void StickBall()
     {
         _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
@@ -142,7 +85,7 @@ public class JumpController : MonoBehaviour
         newPos += Vector3.forward;
         _ballStick.transform.position = newPos;
     }
-    
+
     public void FreeBallFromBallStick()
     {
         _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
@@ -150,9 +93,9 @@ public class JumpController : MonoBehaviour
 
     private void MoveBallToJumpHigher()
     {
-        
+
     }
-    
+
     private void PrepareToJump(Touch touch)
     {
         if (touch.phase == TouchPhase.Began)
@@ -164,6 +107,7 @@ public class JumpController : MonoBehaviour
         {
             MoveBallToJumpHigher();
         }
+
         if (touch.phase == TouchPhase.Ended)
         {
             Vector2 secondTouchPos = new Vector2(touch.position.x, touch.position.y);
@@ -172,11 +116,14 @@ public class JumpController : MonoBehaviour
             {
                 return;
             }
+
             _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
                                     RigidbodyConstraints.FreezePositionZ;
             force /= 40.0f;
             force = force >= 15.0f ? 15.0f : force;
             Jump(force);
+            // _ballStickAnimator.Play("RetractStick");
+            _ballStickAnimator.Play("IdleFly");
             _isStick = !_isStick;
         }
     }
@@ -191,16 +138,17 @@ public class JumpController : MonoBehaviour
                 case null:
                     StickBall();
                     _isStick = !_isStick;
+                    _ballStickAnimator.Play("IdleStick");
                     break;
                 case "MetallicBarrier":
                     StickBall();
-                    _ballStickAnimator.Play("StickRetract");
+                    _ballStickAnimator.Play("RetractStick");
                     break;
                 case "RedBarrier":
                     GameController.RestartLevel();
                     break;
+
             }
-            _isAlreadyTouched = true;
         }
     }
 }
