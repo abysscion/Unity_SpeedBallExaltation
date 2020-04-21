@@ -185,11 +185,20 @@ public class JumpController : MonoBehaviour
     {
         if (touch.phase == TouchPhase.Began)
         {
-            if (CheckIfAbleToStick())
+            var hitTag = GetHitTag();
+            switch (hitTag)
             {
-                _jumperRb.constraints = RigidbodyConstraints.FreezePosition |
-                                        RigidbodyConstraints.FreezeRotation;
-                _isStick = !_isStick;
+                case null:
+                    StickBall();
+                    _isStick = !_isStick;
+                    break;
+                case "MetallicBarrier":
+                    StickBall();
+                    _ballStickAnimator.Play("StickRetract");
+                    break;
+                case "RedBarrier":
+                    GameController.RestartLevel();
+                    break;
             }
             _isAlreadyTouched = true;
         }
