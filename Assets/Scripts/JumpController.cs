@@ -23,7 +23,6 @@ public class JumpController : MonoBehaviour
         _ballStickAnimator = _ballStick.GetComponent<Animator>();
         _ballStickRenderer = _ballStick.GetComponent<MeshRenderer>();
         _ballStick.transform.Translate(0,0,1.0f);
-        _ballStick.SetActive(false);
         _isStick = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
