@@ -9,11 +9,13 @@ public class JumpController : MonoBehaviour
     public float defaultBallStickFadeTime = 0.5f;
 
     private bool _isStick;
+    private bool _isAlreadyTouched;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
     private GameObject _ballStick;
     private MeshRenderer _ballStickRenderer;
     private Animator _ballStickAnimator;
+    private Vector2 _firstTouchPos;
 
     private void Start()
     {
@@ -21,6 +23,7 @@ public class JumpController : MonoBehaviour
         _ballStickAnimator = _ballStick.GetComponent<Animator>();
         _ballStickRenderer = _ballStick.GetComponent<MeshRenderer>();
         _ballStick.transform.Translate(0,0,1.0f);
+        _ballStick.SetActive(false);
         _isStick = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
@@ -55,20 +58,29 @@ public class JumpController : MonoBehaviour
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Ended)
+                if (_isAlreadyTouched)
                 {
-                    /*
-                    if (CheckIfAbleToStick())
-                        ChangeBallState();
-                        */
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        _isAlreadyTouched = false;
+                    }
+                    return;
+                }
+                if (_isStick)
+                {
+                    PrepareToJump(touch);
+                }
+                else
+                {
+                    PrepareToStick(touch);
                 }
             }
         }
     }
 
-    private void Jump()
+    private void Jump(float force)
     {
-        Vector3 forceVector = new Vector3(0.0f, 10.0f, 0.0f);
+        Vector3 forceVector = new Vector3(0.0f, force, 0.0f);
         _jumperRb.AddForce(forceVector, ForceMode.VelocityChange);
         _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
     }
@@ -77,17 +89,39 @@ public class JumpController : MonoBehaviour
     {
         if (_isStick)
         {
-            FreeBallFromBallStick();
-            Jump();
+            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            Jump(10.0f);
         }
         else
         {
-            StickBall();
+            _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+            var newPos = this.transform.position;
+            newPos += Vector3.forward;
+            _ballStick.transform.position = newPos;
+            _ballStick.SetActive(true);
         }
 
         _isStick = !_isStick;
     }
 
+    private bool CheckIfAbleToStick()
+    {
+        if (canDrawDebug)
+            Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
+
+        if (Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
+        {
+            if (hitRes.transform.CompareTag("MetallicBarrier"))
+                return false;
+            if (hitRes.transform.CompareTag("RedBarrier"))
+            {
+                GameController.RestartLevel();
+                return false;
+            }
+        }
+        return true;
+    }
+    
     private string GetHitTag()
     {
         if (canDrawDebug)
@@ -101,7 +135,7 @@ public class JumpController : MonoBehaviour
         
         return null;
     }
-
+    
     private void StickBall()
     {
         _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
@@ -109,9 +143,56 @@ public class JumpController : MonoBehaviour
         newPos += Vector3.forward;
         _ballStick.transform.position = newPos;
     }
-
+    
     public void FreeBallFromBallStick()
     {
         _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+    }
+
+    private void MoveBallToJumpHigher()
+    {
+        
+    }
+    
+    private void PrepareToJump(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
+        }
+
+        if (touch.phase == TouchPhase.Moved)
+        {
+            MoveBallToJumpHigher();
+        }
+        if (touch.phase == TouchPhase.Ended)
+        {
+            Vector2 secondTouchPos = new Vector2(touch.position.x, touch.position.y);
+            float force = _firstTouchPos.y - secondTouchPos.y;
+            if (force < 200)
+            {
+                return;
+            }
+            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
+                                    RigidbodyConstraints.FreezePositionZ;
+            force /= 40.0f;
+            force = force >= 15.0f ? 15.0f : force;
+            Jump(force);
+            _isStick = !_isStick;
+        }
+    }
+
+    private void PrepareToStick(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            if (CheckIfAbleToStick())
+            {
+                _jumperRb.constraints = RigidbodyConstraints.FreezePosition |
+                                        RigidbodyConstraints.FreezeRotation;
+                _isStick = !_isStick;
+            }
+            _isAlreadyTouched = true;
+        }
     }
 }
