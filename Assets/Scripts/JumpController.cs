@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class JumpController : MonoBehaviour
 {
+    public bool canDrawDebug;
     public bool canControlWithMouse;
 
     private bool _isStay;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         _isStay = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    private void Update()
     {
         _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         // _cameraTransform.position = new Vector3(1.5f, transform.position.y + 0.5f, -4.0f);
@@ -27,7 +25,8 @@ public class JumpController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                ChangeBallState();
+                if (CheckIfAbleToStick())
+                    ChangeBallState();
             }
         }
         else
@@ -37,7 +36,8 @@ public class JumpController : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Ended)
                 {
-                    ChangeBallState();
+                    if (CheckIfAbleToStick())
+                        ChangeBallState();
                 }
             }
         }
@@ -56,15 +56,32 @@ public class JumpController : MonoBehaviour
         {
             _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
                                     RigidbodyConstraints.FreezePositionZ;
-                                    // | RigidbodyConstraints.FreezeRotation;
             Jump();
         }
         else
         {
-            _jumperRb.constraints =
-                RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+            _jumperRb.constraints = RigidbodyConstraints.FreezePosition |
+                                    RigidbodyConstraints.FreezeRotation;
         }
 
         _isStay = !_isStay;
+    }
+
+    private bool CheckIfAbleToStick()
+    {
+        if (canDrawDebug)
+            Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
+
+        if (Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
+        {
+            if (hitRes.transform.CompareTag("MetallicBarrier"))
+                return false;
+            if (hitRes.transform.CompareTag("RedBarrier"))
+            {
+                SceneManager.LoadScene("SampleScene");
+                return false;
+            }
+        }
+        return true;
     }
 }
