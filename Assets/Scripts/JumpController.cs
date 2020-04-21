@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class JumpController : MonoBehaviour
@@ -9,9 +10,13 @@ public class JumpController : MonoBehaviour
     private bool _isStay;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
+    private GameObject _ballStick;
     
-    void Start()
+    private void Start()
     {
+        _ballStick = GameObject.Find("BallStick");
+        _ballStick.transform.Translate(0,0,1.0f);
+        _ballStick.SetActive(false);
         _isStay = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
@@ -54,14 +59,17 @@ public class JumpController : MonoBehaviour
     {
         if (_isStay)
         {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
-                                    RigidbodyConstraints.FreezePositionZ;
+            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            _ballStick.SetActive(false);
             Jump();
         }
         else
         {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePosition |
-                                    RigidbodyConstraints.FreezeRotation;
+            _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+            var newPos = this.transform.position;
+            newPos += Vector3.forward;
+            _ballStick.transform.position = newPos;
+            _ballStick.SetActive(true);
         }
 
         _isStay = !_isStay;
