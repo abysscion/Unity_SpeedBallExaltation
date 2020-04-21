@@ -6,18 +6,22 @@ public class JumpController : MonoBehaviour
 {
     public bool canDrawDebug;
     public bool canControlWithMouse;
+    public float defaultBallStickFadeTime = 0.5f;
 
-    private bool _isStay;
+    private bool _isStick;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
     private GameObject _ballStick;
-    
+    private MeshRenderer _ballStickRenderer;
+    private Animator _ballStickAnimator;
+
     private void Start()
     {
         _ballStick = GameObject.Find("BallStick");
+        _ballStickAnimator = _ballStick.GetComponent<Animator>();
+        _ballStickRenderer = _ballStick.GetComponent<MeshRenderer>();
         _ballStick.transform.Translate(0,0,1.0f);
-        _ballStick.SetActive(false);
-        _isStay = true;
+        _isStick = true;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
     }
@@ -30,8 +34,20 @@ public class JumpController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (CheckIfAbleToStick())
-                    ChangeBallState();
+                var hitTag = GetHitTag();
+                switch (hitTag)
+                {
+                    case null:
+                        ChangeBallState();
+                        break;
+                    case "MetallicBarrier":
+                        StickBall();
+                        _ballStickAnimator.Play("StickRetract");
+                        break;
+                    case "RedBarrier":
+                        //;
+                        break;
+                }
             }
         }
         else
@@ -41,8 +57,10 @@ public class JumpController : MonoBehaviour
                 Touch touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Ended)
                 {
+                    /*
                     if (CheckIfAbleToStick())
                         ChangeBallState();
+                        */
                 }
             }
         }
@@ -57,39 +75,43 @@ public class JumpController : MonoBehaviour
 
     private void ChangeBallState()
     {
-        if (_isStay)
+        if (_isStick)
         {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-            _ballStick.SetActive(false);
+            FreeBallFromBallStick();
             Jump();
         }
         else
         {
-            _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
-            var newPos = this.transform.position;
-            newPos += Vector3.forward;
-            _ballStick.transform.position = newPos;
-            _ballStick.SetActive(true);
+            StickBall();
         }
 
-        _isStay = !_isStay;
+        _isStick = !_isStick;
     }
 
-    private bool CheckIfAbleToStick()
+    private string GetHitTag()
     {
         if (canDrawDebug)
             Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
+        if (!Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
+            return null;
+        if (hitRes.transform.CompareTag("MetallicBarrier"))
+            return "MetallicBarrier";
+        if (hitRes.transform.CompareTag("RedBarrier"))
+            return "RedBarrier";
+        
+        return null;
+    }
 
-        if (Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
-        {
-            if (hitRes.transform.CompareTag("MetallicBarrier"))
-                return false;
-            if (hitRes.transform.CompareTag("RedBarrier"))
-            {
-                GameController.RestartLevel();
-                return false;
-            }
-        }
-        return true;
+    private void StickBall()
+    {
+        _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+        var newPos = this.transform.position;
+        newPos += Vector3.forward;
+        _ballStick.transform.position = newPos;
+    }
+
+    public void FreeBallFromBallStick()
+    {
+        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
     }
 }

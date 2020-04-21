@@ -518,6 +518,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canDrawDebug: 0
   canControlWithMouse: 0
+  defaultBallStickFadeTime: 500
+  _timeUntilBallStickFade: 0
 --- !u!54 &1187426908
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -811,6 +813,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canDrawDebug: 1
   canControlWithMouse: 1
+  defaultBallStickFadeTime: 0.5
+  _timeUntilBallStickFade: 0
 --- !u!54 &1346165957
 Rigidbody:
   m_ObjectHideFlags: 0
