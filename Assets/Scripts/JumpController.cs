@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class JumpController : MonoBehaviour
 {
+    public bool canControlWithMouse;
+
     private bool _isStay;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
@@ -19,24 +21,24 @@ public class JumpController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _cameraTransform.position = new Vector3(1.5f, transform.position.y + 0.5f, -4.0f);
-        if (Input.touchCount > 0)
+        _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+        // _cameraTransform.position = new Vector3(1.5f, transform.position.y + 0.5f, -4.0f);
+        if (canControlWithMouse)
         {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Ended)
+            if (Input.GetMouseButtonDown(0))
             {
-                if (_isStay)
+                ChangeBallState();
+            }
+        }
+        else
+        {
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
-                                            RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-                    Jump();
+                    ChangeBallState();
                 }
-                else
-                {
-                    _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
-                }
-
-                _isStay = !_isStay;
             }
         }
     }
@@ -45,5 +47,24 @@ public class JumpController : MonoBehaviour
     {
         Vector3 forceVector = new Vector3(0.0f, 10.0f, 0.0f);
         _jumperRb.AddForce(forceVector, ForceMode.VelocityChange);
+        _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
+    }
+
+    private void ChangeBallState()
+    {
+        if (_isStay)
+        {
+            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
+                                    RigidbodyConstraints.FreezePositionZ;
+                                    // | RigidbodyConstraints.FreezeRotation;
+            Jump();
+        }
+        else
+        {
+            _jumperRb.constraints =
+                RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+        }
+
+        _isStay = !_isStay;
     }
 }
