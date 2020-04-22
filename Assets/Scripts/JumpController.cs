@@ -5,10 +5,13 @@ public class JumpController : MonoBehaviour
     public bool canDrawDebug;
     public bool canControlWithMouse;
     public float mouseForce = 5.0f;
+    public float boostMultiplier = 2.0f;
 
     private bool _isStick;
     private bool _ableToControl;
     private bool _isAlreadyTouched;
+    [SerializeField]
+    private float _jumpMultiplier;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
     private GameObject _ballStick;
@@ -21,6 +24,7 @@ public class JumpController : MonoBehaviour
         _ballStick = GameObject.Find("BallStick");
         _ballStickAnimator = _ballStick.GetComponent<Animator>();
         _isStick = true;
+        _jumpMultiplier = 1.0f;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
         _ballStickAnimator.Play("IdleStick");
@@ -59,7 +63,7 @@ public class JumpController : MonoBehaviour
             {
                 _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
                                         RigidbodyConstraints.FreezePositionZ;
-                Jump(mouseForce);
+                Jump(mouseForce * _jumpMultiplier);
                 _ballStickAnimator.Play("RetractStick");
                 _isStick = !_isStick;
             }
@@ -72,6 +76,13 @@ public class JumpController : MonoBehaviour
                         StickBall();
                         _isStick = !_isStick;
                         _ballStickAnimator.Play("IdleStick");
+                        break;
+                    case "JumpBooster": //TODO: move content to method
+                        Debug.Log("GOTTA BOOST");
+                        StickBall();
+                        _isStick = !_isStick;
+                        _ballStickAnimator.Play("IdleStick");
+                        _jumpMultiplier = boostMultiplier;
                         break;
                     case "MetallicBarrier":
                         StickBall();
@@ -87,13 +98,16 @@ public class JumpController : MonoBehaviour
 
     private void Jump(float force)
     {
-        Vector3 forceVector = new Vector3(0.0f, force, 0.0f);
+        Debug.Log("jumped with force: " + force);
+        var forceVector = new Vector3(0.0f, force, 0.0f);
         _jumperRb.AddForce(forceVector, ForceMode.VelocityChange);
         _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
+        _jumpMultiplier = 1.0f;
     }
 
     private string GetHitTag()
     {
+        //TODO: remove this. should return tag if any hit.
         if (canDrawDebug)
             Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
         if (!Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
@@ -102,6 +116,8 @@ public class JumpController : MonoBehaviour
             return "MetallicBarrier";
         if (hitRes.transform.CompareTag("RedBarrier"))
             return "RedBarrier";
+        if (hitRes.transform.CompareTag("JumpBooster"))
+            return "JumpBooster";
 
         return null;
     }
@@ -144,7 +160,7 @@ public class JumpController : MonoBehaviour
                                     RigidbodyConstraints.FreezePositionZ;
             force /= 40.0f;
             force = force >= 15.0f ? 15.0f : force;
-            Jump(force);
+            Jump(force * _jumpMultiplier);
             // _ballStickAnimator.Play("RetractStick");
             _ballStickAnimator.Play("IdleFly");
             _isStick = !_isStick;
