@@ -162,6 +162,7 @@ public class JumpController : MonoBehaviour
                     StickBall();
                     _isStick = !_isStick;
                     _ballStickAnimator.Play("IdleStick");
+                    _isAlreadyTouched = true;
                     break;
                 case "MetallicBarrier":
                     StickBall();
