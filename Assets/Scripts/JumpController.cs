@@ -187,7 +187,13 @@ public class JumpController : MonoBehaviour
                 case "RedBarrier":
                     GameController.RestartLevel();
                     break;
-
+                case "JumpBooster": //TODO: move content to method
+                    Debug.Log("GOTTA BOOST");
+                    StickBall();
+                    _isStick = !_isStick;
+                    _ballStickAnimator.Play("IdleStick");
+                    _jumpMultiplier = boostMultiplier;
+                    break;
             }
         }
     }
