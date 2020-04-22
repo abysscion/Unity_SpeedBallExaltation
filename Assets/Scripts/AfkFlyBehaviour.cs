@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FreeBallFromBallStick : StateMachineBehaviour
+public class AfkFlyBehaviour : StateMachineBehaviour
 {
+    private JumpController _gameController;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        _gameController = GameObject.Find("Jumper0").GetComponent<JumpController>();
+        _gameController.ToggleControl();
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,7 +21,7 @@ public class FreeBallFromBallStick : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        GameObject.Find("Jumper0").GetComponent<JumpController>().FreeBallFromBallStick();
+        _gameController.ToggleControl();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
