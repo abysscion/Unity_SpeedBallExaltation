@@ -9,9 +9,8 @@ public class JumpController : MonoBehaviour
 
     private bool _isStick;
     private bool _ableToControl;
-    private bool _isAlreadyTouched;
     [SerializeField]
-    private float _jumpMultiplier;
+    private float jumpMultiplier;
     private Rigidbody _jumperRb;
     private Transform _cameraTransform;
     private GameObject _ballStick;
@@ -24,7 +23,7 @@ public class JumpController : MonoBehaviour
         _ballStick = GameObject.Find("BallStick");
         _ballStickAnimator = _ballStick.GetComponent<Animator>();
         _isStick = true;
-        _jumpMultiplier = 1.0f;
+        jumpMultiplier = 1.0f;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
         _ballStickAnimator.Play("IdleStick");
@@ -41,13 +40,12 @@ public class JumpController : MonoBehaviour
         else if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (_isAlreadyTouched)
+            
+            if (GameController.currentGameState == GameController.GameState.Lose)
             {
-                if (touch.phase == TouchPhase.Ended)
-                    _isAlreadyTouched = false;
-                return;
+                if (touch.phase == TouchPhase.Began)
+                    GameController.RestartLevel();
             }
-
             if (_isStick)
                 PrepareToJump(touch);
             else
@@ -59,11 +57,15 @@ public class JumpController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (GameController.currentGameState == GameController.GameState.Lose)
+            {
+                GameController.RestartLevel();
+            }
             if (_isStick)
             {
                 _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
                                         RigidbodyConstraints.FreezePositionZ;
-                Jump(mouseForce * _jumpMultiplier);
+                Jump(mouseForce * jumpMultiplier);
                 _ballStickAnimator.Play("RetractStick");
                 _isStick = !_isStick;
             }
@@ -78,22 +80,96 @@ public class JumpController : MonoBehaviour
                         _ballStickAnimator.Play("IdleStick");
                         break;
                     case "JumpBooster": //TODO: move content to method
-                        Debug.Log("GOTTA BOOST");
-                        StickBall();
-                        _isStick = !_isStick;
-                        _ballStickAnimator.Play("IdleStick");
-                        _jumpMultiplier = boostMultiplier;
+                        HitJumpBooster();
                         break;
                     case "MetallicBarrier":
-                        StickBall();
-                        _ballStickAnimator.Play("RetractStick");
+                        HitMetallicBarrier();
                         break;
                     case "RedBarrier":
-                        GameController.RestartLevel();
+                        HitRedBarrier();
                         break;
                 }
             }
         }
+    }
+    
+     private void PrepareToJump(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
+        }
+
+        if (touch.phase == TouchPhase.Moved)
+        {
+            MoveBallToJumpHigher();
+        }
+
+        if (touch.phase == TouchPhase.Ended)
+        {
+            Vector2 secondTouchPos = new Vector2(touch.position.x, touch.position.y);
+            float force = _firstTouchPos.y - secondTouchPos.y;
+            if (force < 200)
+            {
+                return;
+            }
+
+            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
+                                    RigidbodyConstraints.FreezePositionZ;
+            force /= 40.0f;
+            force = force >= 15.0f ? 15.0f : force;
+            Jump(force * jumpMultiplier);
+            // _ballStickAnimator.Play("RetractStick");
+            _ballStickAnimator.Play("IdleFly");
+            _isStick = !_isStick;
+        }
+    }
+
+    private void PrepareToStick(Touch touch)
+    {
+        if (touch.phase == TouchPhase.Began)
+        {
+            var hitTag = GetHitTag();
+            switch (hitTag)
+            {
+                case null:
+                    StickBall();
+                    _isStick = !_isStick;
+                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
+                    _ballStickAnimator.Play("IdleStick");
+                    break;
+                case "MetallicBarrier":
+                    HitMetallicBarrier();
+                    break;
+                case "RedBarrier":
+                    HitRedBarrier();
+                    break;
+                case "JumpBooster": //TODO: move content to method
+                    HitJumpBooster();
+                    break;
+            }
+        }
+    }
+
+    private void HitRedBarrier()
+    {
+        StickBall();
+        _ballStickAnimator.Play("RetractStick");
+        GameController.currentGameState = GameController.GameState.Lose;
+    }
+
+    private void HitMetallicBarrier()
+    {
+        StickBall();
+        _ballStickAnimator.Play("RetractStick");
+    }
+
+    private void HitJumpBooster()
+    {
+        StickBall();
+        _isStick = !_isStick;
+        _ballStickAnimator.Play("IdleStick");
+        jumpMultiplier = boostMultiplier;
     }
 
     private void Jump(float force)
@@ -102,7 +178,7 @@ public class JumpController : MonoBehaviour
         var forceVector = new Vector3(0.0f, force, 0.0f);
         _jumperRb.AddForce(forceVector, ForceMode.VelocityChange);
         _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
-        _jumpMultiplier = 1.0f;
+        jumpMultiplier = 1.0f;
     }
 
     private string GetHitTag()
@@ -135,69 +211,6 @@ public class JumpController : MonoBehaviour
 
     }
 
-    private void PrepareToJump(Touch touch)
-    {
-        if (touch.phase == TouchPhase.Began)
-        {
-            _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
-        }
-
-        if (touch.phase == TouchPhase.Moved)
-        {
-            MoveBallToJumpHigher();
-        }
-
-        if (touch.phase == TouchPhase.Ended)
-        {
-            Vector2 secondTouchPos = new Vector2(touch.position.x, touch.position.y);
-            float force = _firstTouchPos.y - secondTouchPos.y;
-            if (force < 200)
-            {
-                return;
-            }
-
-            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
-                                    RigidbodyConstraints.FreezePositionZ;
-            force /= 40.0f;
-            force = force >= 15.0f ? 15.0f : force;
-            Jump(force * _jumpMultiplier);
-            // _ballStickAnimator.Play("RetractStick");
-            _ballStickAnimator.Play("IdleFly");
-            _isStick = !_isStick;
-        }
-    }
-
-    private void PrepareToStick(Touch touch)
-    {
-        if (touch.phase == TouchPhase.Began)
-        {
-            var hitTag = GetHitTag();
-            switch (hitTag)
-            {
-                case null:
-                    StickBall();
-                    _isStick = !_isStick;
-                    _ballStickAnimator.Play("IdleStick");
-                    _isAlreadyTouched = true;
-                    break;
-                case "MetallicBarrier":
-                    StickBall();
-                    _ballStickAnimator.Play("RetractStick");
-                    break;
-                case "RedBarrier":
-                    GameController.RestartLevel();
-                    break;
-                case "JumpBooster": //TODO: move content to method
-                    Debug.Log("GOTTA BOOST");
-                    StickBall();
-                    _isStick = !_isStick;
-                    _ballStickAnimator.Play("IdleStick");
-                    _jumpMultiplier = boostMultiplier;
-                    break;
-            }
-        }
-    }
-    
     public void ToggleControl()
     {
         _ableToControl = !_ableToControl;
