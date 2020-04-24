@@ -14,11 +14,12 @@ public class GameController : MonoBehaviour
         Menu
     }
 
-    public GameState currentGameState;
+    public static GameState currentGameState;
     private GameState _previousGameState;
     // private GameObject _ui;
     private GameObject _restartText;
     private GameObject _pauseButton;
+    private GameObject _panel;
 
 
     public static void RestartLevel()
@@ -43,9 +44,11 @@ public class GameController : MonoBehaviour
         // _ui = GameObject.Find("UI");
         _restartText = GameObject.Find("RestartText");
         _pauseButton = GameObject.Find("PauseButton");
+        _panel = GameObject.Find("Panel");
         // _ui.SetActive(true);
         _restartText.SetActive(false);
         _pauseButton.SetActive(true);
+        _panel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -56,6 +59,7 @@ public class GameController : MonoBehaviour
             _previousGameState = currentGameState;
             if (currentGameState == GameState.Lose)
             {
+                _panel.SetActive(true);
                 _restartText.SetActive(true);
             }
             
