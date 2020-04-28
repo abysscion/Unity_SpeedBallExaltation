@@ -123,6 +123,7 @@ public class JumpController : MonoBehaviour
     {
         StickBall();
         GameController.currentGameState = GameController.GameState.Lose;
+        UnstickBall();
     }
 
     private void HitMetallicBarrier()
