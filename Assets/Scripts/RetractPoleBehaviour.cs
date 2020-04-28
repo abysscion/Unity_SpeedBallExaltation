@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RetractStickBehaviour : StateMachineBehaviour
+public class RetractPoleBehaviour : StateMachineBehaviour
 {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,7 +19,8 @@ public class RetractStickBehaviour : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        GameObject.Find("Jumper0").GetComponent<JumpController>().FreeBallFromBallStick();
+        // GameObject.Find("Jumper0").GetComponent<JumpController>().FreeBallFromBallStick();
+        GameObject.Find("Jumper0").GetComponent<OldJumpController>().FreeBallFromBallStick();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

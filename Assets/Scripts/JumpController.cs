@@ -1,51 +1,62 @@
 ﻿using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class JumpController : MonoBehaviour
 {
-    public bool canDrawDebug;
-    public bool canControlWithMouse;
-    public float mouseForce = 5.0f;
+    public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
+    public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
+    public GameObject bendingPole;
+    public GameObject bendingPoleTarget;
     public float boostMultiplier = 2.0f;
+    public bool canDrawDebug;
 
-    private bool _isStick;
-    private bool _ableToControl;
-    [SerializeField]
-    private float jumpMultiplier;
-    private Rigidbody _jumperRb;
+    private const float MaxSwipeLength = ForceLimit * MagicalForceDivider;
+    private const float MagicalForceDivider = 40.0f; //idk how to name it
+    private const float MinSwipeLength = 200.0f;
+    private const float ForceLimit = 15.0f;
+    
+    private SkinnedMeshRenderer _bendingPoleRenderer;
     private Transform _cameraTransform;
-    private GameObject _ballStick;
-    private Animator _ballStickAnimator;
+    private Rigidbody _jumperRb;
+    private Animator _bendingPoleAnimator;
     private Vector2 _firstTouchPos;
+    private Vector3 _bendingPoleTargetPosOnTouch;
+    private Vector3 _ballPositionOnTouch;
+    private Vector3 _ballPullingStep;
+    private float _jumpMultiplier;
+    private bool _ableToControl;
+    private bool _isStick;
 
     private void Start()
     {
+        bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
+        bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
+        _ballPullingStep = (pullEndPosition - pullStartPosition) / (MaxSwipeLength - MinSwipeLength);
         _ableToControl = true;
-        _ballStick = GameObject.Find("BallStick");
-        _ballStickAnimator = _ballStick.GetComponent<Animator>();
-        _isStick = true;
-        jumpMultiplier = 1.0f;
+        _bendingPoleAnimator = bendingPole.GetComponentInChildren<Animator>();
+        _bendingPoleRenderer = bendingPole.GetComponentInChildren<SkinnedMeshRenderer>();
+        _jumpMultiplier = 1.0f;
         _jumperRb = GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
-        _ballStickAnimator.Play("IdleStick");
+        StickBall();
     }
 
     private void Update()
     {
         _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
-        // _cameraTransform.position = new Vector3(1.5f, transform.position.y + 0.5f, -4.0f);
         if (!_ableToControl)
             return;
-        if (canControlWithMouse)
-            HandleMouseControl();
-        else if (Input.touchCount > 0)
+        
+        // if (Input.touchCount > 0) //TODO: replace 
+        // {
+        //  var touch = Input.GetTouch(0);
+        var touches = InputHelper.GetTouches();
+        if (touches.Count > 0)
         {
-            Touch touch = Input.GetTouch(0);
-            
+            var touch = touches[0];
             if (GameController.currentGameState == GameController.GameState.Lose)
-            {
                 if (touch.phase == TouchPhase.Began)
                     GameController.RestartLevel();
-            }
             if (_isStick)
                 PrepareToJump(touch);
             else
@@ -53,75 +64,30 @@ public class JumpController : MonoBehaviour
         }
     }
 
-    private void HandleMouseControl()
+    private void PrepareToJump(Touch touch)
     {
-        if (Input.GetMouseButtonDown(0))
+        switch (touch.phase)
         {
-            if (GameController.currentGameState == GameController.GameState.Lose)
+            case TouchPhase.Began:
+                _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
+                _ballPositionOnTouch = _jumperRb.position;
+                _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position; //TODO: move to method
+                break;
+            case TouchPhase.Moved:
+                MoveBallToJumpHigher(touch);
+                break;
+            case TouchPhase.Ended:
             {
-                GameController.RestartLevel();
-            }
-            if (_isStick)
-            {
-                _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
-                                        RigidbodyConstraints.FreezePositionZ;
-                Jump(mouseForce * jumpMultiplier);
-                _ballStickAnimator.Play("RetractStick");
-                _isStick = !_isStick;
-            }
-            else
-            {
-                var hitTag = GetHitTag();
-                switch (hitTag)
-                {
-                    case null:
-                        StickBall();
-                        _isStick = !_isStick;
-                        _ballStickAnimator.Play("IdleStick");
-                        break;
-                    case "JumpBooster": //TODO: move content to method
-                        HitJumpBooster();
-                        break;
-                    case "MetallicBarrier":
-                        HitMetallicBarrier();
-                        break;
-                    case "RedBarrier":
-                        HitRedBarrier();
-                        break;
-                }
-            }
-        }
-    }
-    
-     private void PrepareToJump(Touch touch)
-    {
-        if (touch.phase == TouchPhase.Began)
-        {
-            _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
-        }
+                var secondTouchPos = new Vector2(touch.position.x, touch.position.y);
+                var force = CalculateJumpForce(_firstTouchPos.y - secondTouchPos.y); 
 
-        if (touch.phase == TouchPhase.Moved)
-        {
-            MoveBallToJumpHigher();
-        }
-
-        if (touch.phase == TouchPhase.Ended)
-        {
-            Vector2 secondTouchPos = new Vector2(touch.position.x, touch.position.y);
-            float force = _firstTouchPos.y - secondTouchPos.y;
-            if (force < 200)
-            {
-                return;
+                if (force <= 0.0f) return;
+                UnstickBall();
+                bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
+                Jump(force);
+                _jumperRb.transform.position = _ballPositionOnTouch;
+                break;
             }
-
-            _jumperRb.constraints = RigidbodyConstraints.FreezePositionX |
-                                    RigidbodyConstraints.FreezePositionZ;
-            force /= 40.0f;
-            force = force >= 15.0f ? 15.0f : force;
-            Jump(force * jumpMultiplier);
-            // _ballStickAnimator.Play("RetractStick");
-            _ballStickAnimator.Play("IdleFly");
-            _isStick = !_isStick;
         }
     }
 
@@ -129,14 +95,14 @@ public class JumpController : MonoBehaviour
     {
         if (touch.phase == TouchPhase.Began)
         {
-            var hitTag = GetHitTag();
+            var hitTag = this.GetHitTag();
             switch (hitTag)
             {
                 case null:
                     StickBall();
-                    _isStick = !_isStick;
-                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
-                    _ballStickAnimator.Play("IdleStick");
+                    _ballPositionOnTouch = _jumperRb.position;
+                    _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
+                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y); //TODO: move to method
                     break;
                 case "MetallicBarrier":
                     HitMetallicBarrier();
@@ -144,8 +110,11 @@ public class JumpController : MonoBehaviour
                 case "RedBarrier":
                     HitRedBarrier();
                     break;
-                case "JumpBooster": //TODO: move content to method
+                case "JumpBooster":
                     HitJumpBooster();
+                    _ballPositionOnTouch = _jumperRb.position;
+                    _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
+                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y); //TODO: move to method
                     break;
             }
         }
@@ -154,39 +123,58 @@ public class JumpController : MonoBehaviour
     private void HitRedBarrier()
     {
         StickBall();
-        _ballStickAnimator.Play("RetractStick");
         GameController.currentGameState = GameController.GameState.Lose;
     }
 
     private void HitMetallicBarrier()
     {
         StickBall();
-        _ballStickAnimator.Play("RetractStick");
+        UnstickBall();
     }
 
     private void HitJumpBooster()
     {
         StickBall();
-        _isStick = !_isStick;
-        _ballStickAnimator.Play("IdleStick");
-        jumpMultiplier = boostMultiplier;
+        _jumpMultiplier = boostMultiplier;
     }
 
     private void Jump(float force)
     {
-        Debug.Log("jumped with force: " + force);
         var forceVector = new Vector3(0.0f, force, 0.0f);
+        
+        _jumperRb.isKinematic = false;
+        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         _jumperRb.AddForce(forceVector, ForceMode.VelocityChange);
         _jumperRb.AddTorque(new Vector3(5.0f, 0, 0), ForceMode.Impulse);
-        jumpMultiplier = 1.0f;
+        _jumpMultiplier = 1.0f;
+    }
+
+    private void StickBall()
+    {
+        _isStick = true;
+        _jumperRb.isKinematic = true;
+        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
+        bendingPole.transform.position = new Vector3(0, this.transform.position.y, -0.4f);
+        _bendingPoleRenderer.enabled = true;
+        _bendingPoleAnimator.Play("StickBendingPole");
+        bendingPoleTarget.transform.SetParent(_jumperRb.transform);
+    }
+
+    private void UnstickBall()
+    {
+        _isStick = false;
+        _jumperRb.isKinematic = false;
+        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        _bendingPoleRenderer.enabled = false; //TODO: change it to animation or smth like that
+        bendingPoleTarget.transform.SetParent(bendingPole.transform);
     }
 
     private string GetHitTag()
     {
-        //TODO: remove this. should return tag if any hit.
+        //TODO: rethink this someday
         if (canDrawDebug)
-            Debug.DrawRay(this.transform.position, Vector3.forward * 2, Color.green, 2.0f);
-        if (!Physics.Raycast(this.transform.position, Vector3.forward, out var hitRes))
+            Debug.DrawRay(transform.position, Vector3.forward * 2, Color.green, 2.0f);
+        if (!Physics.Raycast(transform.position, Vector3.forward, out var hitRes))
             return null;
         if (hitRes.transform.CompareTag("MetallicBarrier"))
             return "MetallicBarrier";
@@ -197,27 +185,28 @@ public class JumpController : MonoBehaviour
 
         return null;
     }
-
-    private void StickBall()
-    {
-        _jumperRb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
-        var newPos = this.transform.position;
-        newPos += Vector3.forward;
-        _ballStick.transform.position = newPos;
-    }
-
-    private void MoveBallToJumpHigher()
-    {
-
-    }
-
-    public void ToggleControl()
-    {
-        _ableToControl = !_ableToControl;
-    }
     
-    public void FreeBallFromBallStick()
+    private void MoveBallToJumpHigher(Touch touch)
     {
-        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        var swipeLength = _firstTouchPos.y - touch.position.y;
+
+        if (swipeLength < MinSwipeLength)
+            return;
+        if (swipeLength < MaxSwipeLength)
+        {
+            swipeLength -= MinSwipeLength;
+            _jumperRb.position = _ballPositionOnTouch + _ballPullingStep * swipeLength;
+        }
+    }
+
+    private float CalculateJumpForce(float swipeLength)
+    {
+        float force;
+
+        if (swipeLength < MinSwipeLength)
+            return 0.0f;
+        force = swipeLength / MagicalForceDivider;
+        force = force >= ForceLimit ? ForceLimit : force;
+        return force * _jumpMultiplier;
     }
 }
