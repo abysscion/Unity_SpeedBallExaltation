@@ -7,6 +7,7 @@ TagManager:
   - MetallicBarrier
   - RedBarrier
   - JumpBooster
+  - JumpBoosterCenter
   layers:
   - Default
   - TransparentFX
