@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class AfkFlyBehaviour : StateMachineBehaviour
 {
-    private JumpController _gameController;
+    // private JumpController _gameController;
+    private OldJumpController _gameController;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _gameController = GameObject.Find("Jumper0").GetComponent<JumpController>();
+        _gameController = GameObject.Find("Jumper0").GetComponent<OldJumpController>();
         _gameController.ToggleControl();
     }
 
