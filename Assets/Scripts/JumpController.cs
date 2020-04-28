@@ -7,7 +7,8 @@ public class JumpController : MonoBehaviour
     public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
     public GameObject bendingPole;
     public GameObject bendingPoleTarget;
-    public float boostMultiplier = 2.0f;
+    public float boostCenterMultiplier = 2.0f;
+    public float boostMultiplier = 1.5f;
     public bool canDrawDebug;
 
     private const float MaxSwipeLength = ForceLimit * MagicalForceDivider;
@@ -69,9 +70,7 @@ public class JumpController : MonoBehaviour
         switch (touch.phase)
         {
             case TouchPhase.Began:
-                _firstTouchPos = new Vector2(touch.position.x, touch.position.y);
-                _ballPositionOnTouch = _jumperRb.position;
-                _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position; //TODO: move to method
+                SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
                 break;
             case TouchPhase.Moved:
                 MoveBallToJumpHigher(touch);
@@ -100,9 +99,7 @@ public class JumpController : MonoBehaviour
             {
                 case null:
                     StickBall();
-                    _ballPositionOnTouch = _jumperRb.position;
-                    _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
-                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y); //TODO: move to method
+                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
                     break;
                 case "MetallicBarrier":
                     HitMetallicBarrier();
@@ -112,9 +109,11 @@ public class JumpController : MonoBehaviour
                     break;
                 case "JumpBooster":
                     HitJumpBooster();
-                    _ballPositionOnTouch = _jumperRb.position;
-                    _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
-                    _firstTouchPos = new Vector2(touch.position.x, touch.position.y); //TODO: move to method
+                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
+                    break;
+                case "JumpBoosterCenter":
+                    HitJumpBoosterCenter();
+                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
                     break;
             }
         }
@@ -136,6 +135,12 @@ public class JumpController : MonoBehaviour
     {
         StickBall();
         _jumpMultiplier = boostMultiplier;
+    }
+    
+    private void HitJumpBoosterCenter()
+    {
+        StickBall();
+        _jumpMultiplier = boostCenterMultiplier;
     }
 
     private void Jump(float force)
@@ -182,7 +187,9 @@ public class JumpController : MonoBehaviour
             return "RedBarrier";
         if (hitRes.transform.CompareTag("JumpBooster"))
             return "JumpBooster";
-
+        if (hitRes.transform.CompareTag("JumpBoosterCenter"))
+            return "JumpBoosterCenter";
+        
         return null;
     }
     
@@ -208,5 +215,12 @@ public class JumpController : MonoBehaviour
         force = swipeLength / MagicalForceDivider;
         force = force >= ForceLimit ? ForceLimit : force;
         return force * _jumpMultiplier;
+    }
+
+    private void SomeStuffWhenBallSticked(float touchPosX, float touchPosY)
+    {
+        _firstTouchPos = new Vector2(touchPosX, touchPosY);
+        _ballPositionOnTouch = _jumperRb.position;
+        _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
     }
 }
