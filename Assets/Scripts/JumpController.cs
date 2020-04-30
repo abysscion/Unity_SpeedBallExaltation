@@ -44,7 +44,8 @@ public class JumpController : MonoBehaviour
 
     private void Update()
     {
-        if (GameController.currentGameState != GameController.GameState.Lose && !_isStick)
+        // TODO не двигать камеру вместе с оттягиванием мяча
+        if (GameController.currentGameState != GameController.GameState.Lose)
             _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         if (!_ableToControl)
             return;
@@ -88,7 +89,8 @@ public class JumpController : MonoBehaviour
                 UnstickBall();
                 bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
                 Jump(force);
-                _jumperRb.transform.position = _ballPositionOnTouch;
+                // _jumperRb.transform.position = _ballPositionOnTouch;
+                _jumperRb.transform.position = new Vector3(0.0f, _jumperRb.transform.position.y, _ballPositionOnTouch.z);
                 break;
             }
         }
