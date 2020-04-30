@@ -44,7 +44,8 @@ public class JumpController : MonoBehaviour
 
     private void Update()
     {
-        _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+        if (GameController.currentGameState != GameController.GameState.Lose && !_isStick)
+            _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         if (!_ableToControl)
             return;
         
@@ -78,9 +79,12 @@ public class JumpController : MonoBehaviour
             case TouchPhase.Ended:
             {
                 var secondTouchPos = new Vector2(touch.position.x, touch.position.y);
-                var force = CalculateJumpForce(_firstTouchPos.y - secondTouchPos.y); 
-
-                if (force <= 0.0f) return;
+                var force = CalculateJumpForce(_firstTouchPos.y - secondTouchPos.y);
+                
+                if (force <= 0.0f) 
+                    return;
+                if (GameController.currentGameState == GameController.GameState.StartGame)
+                    GameController.currentGameState = GameController.GameState.InGame;
                 UnstickBall();
                 bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
                 Jump(force);
