@@ -16,9 +16,9 @@ public class GameController : MonoBehaviour
 
     public static GameState currentGameState;
     private GameState _previousGameState;
-    // private GameObject _ui;
     private GameObject _restartText;
-    private GameObject _pauseButton;
+    private GameObject _menuButton;
+    private GameObject _chooseBallButton;
     private GameObject _panel;
 
 
@@ -41,13 +41,13 @@ public class GameController : MonoBehaviour
     {
         _previousGameState = GameState.StartGame;
         currentGameState = GameState.StartGame;
-        // _ui = GameObject.Find("UI");
         _restartText = GameObject.Find("RestartText");
-        _pauseButton = GameObject.Find("PauseButton");
+        _menuButton = GameObject.Find("MenuButton");
+        _chooseBallButton = GameObject.Find("ChooseBallButton");
         _panel = GameObject.Find("Panel");
-        // _ui.SetActive(true);
         _restartText.SetActive(false);
-        _pauseButton.SetActive(true);
+        _menuButton.SetActive(true);
+        _chooseBallButton.SetActive(true);
         _panel.SetActive(false);
     }
 
@@ -70,7 +70,8 @@ public class GameController : MonoBehaviour
 
             if (currentGameState == GameState.InGame)
             {
-                _pauseButton.SetActive(false);
+                _menuButton.SetActive(false);
+                _chooseBallButton.SetActive(false);
             }
         }
     }
