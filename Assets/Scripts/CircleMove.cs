@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+//TODO: check for ability to change gameobject transform in editor via script "online" 
 
 public class CircleMove : MonoBehaviour
 {
@@ -22,7 +21,7 @@ public class CircleMove : MonoBehaviour
         transform.position = centre + offset;
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         Gizmos.DrawSphere(centre, 0.1f);
         Gizmos.DrawLine(centre, transform.position);
