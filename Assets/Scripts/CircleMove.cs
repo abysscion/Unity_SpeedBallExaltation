@@ -1,19 +1,24 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CircleMove : MonoBehaviour
 {
     public float rotateSpeed = 1f;
-    public float radius = 2f;
     public Vector3 centre = new Vector3(0.0f, 1.5f, 0.0f);
-    
-    private float _angle;
+    public float angle = 90.0f;
+    private const float Radius = 2f;
+
+    private void Start()
+    {
+        angle *= Mathf.Deg2Rad;
+    }
 
     private void Update()
     {
-        _angle += rotateSpeed * Time.deltaTime;
-        var offset = new Vector3(Mathf.Sin(_angle), 0.0f, Mathf.Cos(_angle)) * radius;
+        angle += rotateSpeed * Time.deltaTime;
+        var offset = new Vector3(Mathf.Sin(angle), 0.0f, Mathf.Cos(angle)) * Radius;
         transform.position = centre + offset;
     }
 
