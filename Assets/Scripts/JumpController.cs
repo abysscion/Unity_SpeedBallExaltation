@@ -10,6 +10,7 @@ public class JumpController : MonoBehaviour
     public float boostCenterMultiplier = 2.0f;
     public float boostMultiplier = 1.5f;
     public bool canDrawDebug;
+    public bool isStick;
 
     private const float MaxSwipeLength = ForceLimit * MagicalForceDivider;
     private const float MagicalForceDivider = 40.0f; //idk how to name it
@@ -26,7 +27,6 @@ public class JumpController : MonoBehaviour
     private Vector3 _ballPullingStep;
     private float _jumpMultiplier;
     private bool _ableToControl;
-    private bool _isStick;
 
     private void Start()
     {
@@ -60,7 +60,7 @@ public class JumpController : MonoBehaviour
             if (GameController.currentGameState == GameController.GameState.Lose)
                 if (touch.phase == TouchPhase.Began)
                     GameController.RestartLevel();
-            if (_isStick)
+            if (isStick)
                 PrepareToJump(touch);
             else
                 PrepareToStick(touch);
@@ -87,9 +87,7 @@ public class JumpController : MonoBehaviour
                 if (GameController.currentGameState == GameController.GameState.StartGame)
                     GameController.currentGameState = GameController.GameState.InGame;
                 UnstickBall();
-                bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
                 Jump(force);
-                // _jumperRb.transform.position = _ballPositionOnTouch;
                 _jumperRb.transform.position = new Vector3(0.0f, _jumperRb.transform.position.y, _ballPositionOnTouch.z);
                 break;
             }
@@ -163,7 +161,7 @@ public class JumpController : MonoBehaviour
 
     private void StickBall()
     {
-        _isStick = true;
+        isStick = true;
         _jumperRb.isKinematic = true;
         _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezeRotation;
         bendingPole.transform.position = new Vector3(0, this.transform.position.y, -0.4f);
@@ -172,12 +170,18 @@ public class JumpController : MonoBehaviour
         bendingPoleTarget.transform.SetParent(_jumperRb.transform);
     }
 
-    private void UnstickBall()
+    public void UnstickBall()
     {
-        _isStick = false;
+        isStick = false;
         _jumperRb.isKinematic = false;
         _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        RestoreBendingPole();
+    }
+
+    private void RestoreBendingPole()
+    {
         _bendingPoleRenderer.enabled = false; //TODO: change it to animation or smth like that
+        bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
         bendingPoleTarget.transform.SetParent(bendingPole.transform);
     }
 
