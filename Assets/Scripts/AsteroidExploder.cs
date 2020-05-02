@@ -23,6 +23,14 @@ public class AsteroidExploder : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         
+        var jumper = other.gameObject.GetComponent<JumpController>();
+        var jumperRb = jumper.GetComponent<Rigidbody>();
+
+        if (jumper.isStick)
+        {
+            jumper.UnstickBall();
+            jumperRb.velocity = Vector3.down;
+        }
         Destroy(this.gameObject, destroyTimer);
         foreach (var collider in GetComponentsInChildren<Collider>())
             collider.enabled = true;

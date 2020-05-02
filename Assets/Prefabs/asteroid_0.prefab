@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -171,7 +171,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -282,7 +282,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -393,7 +393,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -504,7 +504,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -615,7 +615,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -680,7 +680,7 @@ GameObject:
   - component: {fileID: 2645220197289028199}
   - component: {fileID: 2645220197289028217}
   m_Layer: 0
-  m_Name: asteroid1 (1)
+  m_Name: asteroid_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,6 +752,9 @@ MonoBehaviour:
   xRotator: 0
   yRotator: 0
   zRotator: 0
+  xLock: 0
+  yLock: 0
+  zLock: 0
 --- !u!114 &2645220197289028217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -825,7 +828,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -936,7 +939,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 670224309865224971, guid: d9c23f4db393b5f46b0633378805277c, type: 3}
+  - {fileID: 2100000, guid: f98d28214281f26459c1fcc590544e13, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
