@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class JumpController : MonoBehaviour
 {
+    public GameObject bendingPoleTarget;
+    public GameObject bendingPole;
     public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
     public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
-    public GameObject bendingPole;
-    public GameObject bendingPoleTarget;
     public float boostCenterMultiplier = 2.0f;
     public float boostMultiplier = 1.5f;
     public bool canDrawDebug;
@@ -19,15 +20,28 @@ public class JumpController : MonoBehaviour
     
     private SkinnedMeshRenderer _bendingPoleRenderer;
     private Transform _cameraTransform;
+    private Transform _jumperTransform;
     private Rigidbody _jumperRb;
     private Animator _bendingPoleAnimator;
-    private Vector2 _firstTouchPos;
-    private Vector3 _bendingPoleTargetPosOnTouch;
+    private Vector3 _defaultBendingPoleTargetPosition = new Vector3(0, 0, -2.0f);
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
+    private Vector2 _firstTouchPos;
+    [SerializeField] private float _defaultControlLockDelay = 0.3f;
     private float _jumpMultiplier;
     private bool _ableToControl;
 
+    public void UnstickBall()
+    {
+        StartCoroutine(nameof(UnlockControl));
+        _ableToControl = false;
+        _jumperRb.isKinematic = false;
+        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+        isStick = false;
+        _jumperTransform.position = new Vector3(0.0f, _jumperTransform.position.y, _ballPositionOnTouch.z);
+        RestoreBendingPole();
+    }
+    
     private void Start()
     {
         bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
@@ -37,7 +51,8 @@ public class JumpController : MonoBehaviour
         _bendingPoleAnimator = bendingPole.GetComponentInChildren<Animator>();
         _bendingPoleRenderer = bendingPole.GetComponentInChildren<SkinnedMeshRenderer>();
         _jumpMultiplier = 1.0f;
-        _jumperRb = GetComponent<Rigidbody>();
+        _jumperTransform = this.transform;
+        _jumperRb = this.GetComponent<Rigidbody>();
         _cameraTransform = GameObject.Find("Main Camera").transform;
         StickBall();
     }
@@ -50,7 +65,7 @@ public class JumpController : MonoBehaviour
         if (!_ableToControl)
             return;
         
-        // if (Input.touchCount > 0) //TODO: replace 
+        // if (Input.touchCount > 0) //TODO: replace on release
         // {
         //  var touch = Input.GetTouch(0);
         var touches = InputHelper.GetTouches();
@@ -72,7 +87,7 @@ public class JumpController : MonoBehaviour
         switch (touch.phase)
         {
             case TouchPhase.Began:
-                SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
+                SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                 break;
             case TouchPhase.Moved:
                 MoveBallToJumpHigher(touch);
@@ -88,7 +103,6 @@ public class JumpController : MonoBehaviour
                     GameController.currentGameState = GameController.GameState.InGame;
                 UnstickBall();
                 Jump(force);
-                _jumperRb.transform.position = new Vector3(0.0f, _jumperRb.transform.position.y, _ballPositionOnTouch.z);
                 break;
             }
         }
@@ -103,7 +117,7 @@ public class JumpController : MonoBehaviour
             {
                 case null:
                     StickBall();
-                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
                 case "MetallicBarrier":
                     HitMetallicBarrier();
@@ -113,11 +127,11 @@ public class JumpController : MonoBehaviour
                     break;
                 case "JumpBooster":
                     HitJumpBooster();
-                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
                 case "JumpBoosterCenter":
                     HitJumpBoosterCenter();
-                    SomeStuffWhenBallSticked(touch.position.x, touch.position.y);
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
             }
         }
@@ -132,7 +146,11 @@ public class JumpController : MonoBehaviour
 
     private void HitMetallicBarrier()
     {
-        StickBall();
+        // StickBall(); //TODO: someday it could be done properly
+        // StartCoroutine(nameof(TimedUnstickControl));
+        
+        //TODO: animation
+        _jumperRb.velocity = Vector3.zero;
         UnstickBall();
     }
 
@@ -169,20 +187,26 @@ public class JumpController : MonoBehaviour
         _bendingPoleAnimator.Play("StickBendingPole");
         bendingPoleTarget.transform.SetParent(_jumperRb.transform);
     }
-
-    public void UnstickBall()
+    
+    // private IEnumerator TimedUnstickControl()
+    // {
+    //     yield return new WaitForSecondsRealtime(0.2f);
+    //     
+    //     UnstickBall();
+    // }
+    
+    private IEnumerator UnlockControl()
     {
-        isStick = false;
-        _jumperRb.isKinematic = false;
-        _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-        RestoreBendingPole();
+        yield return new WaitForSecondsRealtime(_defaultControlLockDelay);
+        
+        _ableToControl = true;
     }
 
     private void RestoreBendingPole()
     {
         _bendingPoleRenderer.enabled = false; //TODO: change it to animation or smth like that
-        bendingPoleTarget.transform.position = _bendingPoleTargetPosOnTouch;
         bendingPoleTarget.transform.SetParent(bendingPole.transform);
+        bendingPoleTarget.transform.localPosition = _defaultBendingPoleTargetPosition;
     }
 
     private string GetHitTag()
@@ -228,10 +252,9 @@ public class JumpController : MonoBehaviour
         return force * _jumpMultiplier;
     }
 
-    private void SomeStuffWhenBallSticked(float touchPosX, float touchPosY)
+    private void SomeStuffWhenBallStuck(float touchPosX, float touchPosY)
     {
         _firstTouchPos = new Vector2(touchPosX, touchPosY);
         _ballPositionOnTouch = _jumperRb.position;
-        _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
     }
 }
