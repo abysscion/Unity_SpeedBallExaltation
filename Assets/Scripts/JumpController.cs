@@ -8,8 +8,8 @@ public class JumpController : MonoBehaviour
     public GameObject bendingPole;
     public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
     public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
-    public float boostCenterMultiplier = 2.0f;
-    public float boostMultiplier = 1.5f;
+    public float boostCenterMultiplier = 1.8f;
+    public float boostMultiplier = 1.4f;
     public bool canDrawDebug;
     public bool isStick;
 
@@ -126,13 +126,13 @@ public class JumpController : MonoBehaviour
                     HitRedBarrier();
                     break;
                 case "JumpBooster":
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     HitJumpBooster();
-                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
-                case "JumpBoosterCenter":
-                    HitJumpBoosterCenter();
-                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
-                    break;
+                // case "JumpBoosterCenter":
+                //     HitJumpBoosterCenter();
+                //     SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
+                //     break;
             }
         }
     }
@@ -156,8 +156,17 @@ public class JumpController : MonoBehaviour
 
     private void HitJumpBooster()
     {
+        Physics.Raycast(transform.position, Vector3.forward, out var hitRes);
+        if (hitRes.transform.position.y < transform.position.y + 0.2f &&
+            hitRes.transform.position.y > transform.position.y - 0.2f)
+        {
+            _jumpMultiplier = boostCenterMultiplier;
+        }
+        else
+        {
+            _jumpMultiplier = boostMultiplier;    
+        }
         StickBall();
-        _jumpMultiplier = boostMultiplier;
     }
     
     private void HitJumpBoosterCenter()
