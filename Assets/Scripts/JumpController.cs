@@ -24,7 +24,6 @@ public class JumpController : MonoBehaviour
     private Rigidbody _jumperRb;
     private Animator _bendingPoleAnimator;
     private Vector3 _defaultBendingPoleTargetPosition = new Vector3(0, 0, -2.0f);
-    private Vector3 _bendingPoleTargetPosOnTouch;
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
     private Vector2 _firstTouchPos;
@@ -39,6 +38,7 @@ public class JumpController : MonoBehaviour
         _jumperRb.isKinematic = false;
         _jumperRb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         isStick = false;
+        _jumperTransform.position = new Vector3(0.0f, _jumperTransform.position.y, _ballPositionOnTouch.z);
         RestoreBendingPole();
     }
     
@@ -103,7 +103,6 @@ public class JumpController : MonoBehaviour
                     GameController.currentGameState = GameController.GameState.InGame;
                 UnstickBall();
                 Jump(force);
-                _jumperTransform.position = new Vector3(0.0f, _jumperTransform.position.y, _ballPositionOnTouch.z);
                 break;
             }
         }
@@ -206,8 +205,8 @@ public class JumpController : MonoBehaviour
     private void RestoreBendingPole()
     {
         _bendingPoleRenderer.enabled = false; //TODO: change it to animation or smth like that
-        bendingPoleTarget.transform.position = _defaultBendingPoleTargetPosition; //_bendingPoleTargetPosOnTouch;
         bendingPoleTarget.transform.SetParent(bendingPole.transform);
+        bendingPoleTarget.transform.localPosition = _defaultBendingPoleTargetPosition;
     }
 
     private string GetHitTag()
@@ -257,6 +256,5 @@ public class JumpController : MonoBehaviour
     {
         _firstTouchPos = new Vector2(touchPosX, touchPosY);
         _ballPositionOnTouch = _jumperRb.position;
-        _bendingPoleTargetPosOnTouch = bendingPoleTarget.transform.position;
     }
 }
