@@ -12,6 +12,7 @@ public class CircleMove : MonoBehaviour
     private void Start()
     {
         angle *= Mathf.Deg2Rad;
+        centre = new Vector3(0.0f, transform.position.y, 0.0f);
     }
 
     private void Update()
