@@ -8,16 +8,16 @@ public class JumpController : MonoBehaviour
     public GameObject bendingPole;
     public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
     public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
+    public float forceLimit = 14.6f;
     public float boostCenterMultiplier = 1.8f;
     public float boostMultiplier = 1.4f;
     public bool canDrawDebug;
     public bool isStick;
 
-    private const float MaxSwipeLength = ForceLimit * MagicalForceDivider;
     private const float MagicalForceDivider = 40.0f; //idk how to name it
     private const float MinSwipeLength = 200.0f;
-    private const float ForceLimit = 15.0f;
-    
+    private float _maxSwipeLength;
+
     private SkinnedMeshRenderer _bendingPoleRenderer;
     private Transform _cameraTransform;
     private Transform _jumperTransform;
@@ -44,9 +44,10 @@ public class JumpController : MonoBehaviour
     
     private void Start()
     {
+        _maxSwipeLength = forceLimit * MagicalForceDivider;
         bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
         bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
-        _ballPullingStep = (pullEndPosition - pullStartPosition) / (MaxSwipeLength - MinSwipeLength);
+        _ballPullingStep = (pullEndPosition - pullStartPosition) / (_maxSwipeLength - MinSwipeLength);
         _ableToControl = true;
         _bendingPoleAnimator = bendingPole.GetComponentInChildren<Animator>();
         _bendingPoleRenderer = bendingPole.GetComponentInChildren<SkinnedMeshRenderer>();
@@ -243,7 +244,7 @@ public class JumpController : MonoBehaviour
 
         if (swipeLength < MinSwipeLength)
             return;
-        if (swipeLength < MaxSwipeLength)
+        if (swipeLength < _maxSwipeLength)
         {
             swipeLength -= MinSwipeLength;
             _jumperRb.position = _ballPositionOnTouch + _ballPullingStep * swipeLength;
@@ -257,7 +258,7 @@ public class JumpController : MonoBehaviour
         if (swipeLength < MinSwipeLength)
             return 0.0f;
         force = swipeLength / MagicalForceDivider;
-        force = force >= ForceLimit ? ForceLimit : force;
+        force = force >= forceLimit ? forceLimit : force;
         return force * _jumpMultiplier;
     }
 

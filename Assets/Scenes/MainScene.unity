@@ -393,6 +393,10 @@ PrefabInstance:
       propertyPath: boostMultiplier
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 1499541411, guid: 04942b26dad26f34e86f6e4d08f9bb40, type: 3}
+      propertyPath: forceLimit
+      value: 14.6
+      objectReference: {fileID: 0}
     - target: {fileID: 1851352464461524525, guid: 04942b26dad26f34e86f6e4d08f9bb40,
         type: 3}
       propertyPath: m_Name
@@ -1074,27 +1078,27 @@ PrefabInstance:
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 36.78
+      value: 5.71
       objectReference: {fileID: 0}
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.02
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
@@ -1121,6 +1125,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6796089351941519399, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6796089351941519449, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6796089351941519449, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: bf8085373e424d94e901d61bfc5c94cf, type: 2}
     - target: {fileID: 6796089351941519451, guid: 1334aeaa5228bfe48a82e7435a9c69d8,
         type: 3}
       propertyPath: m_Name
