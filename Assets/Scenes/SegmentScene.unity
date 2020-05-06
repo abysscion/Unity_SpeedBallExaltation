@@ -216,6 +216,11 @@ MonoBehaviour:
   - {fileID: 3699374167013100739, guid: f379ee452b664f44493697dec9d676a6, type: 3}
   - {fileID: 1670538469957208037, guid: f2a92587d0c8daa4f81c774028a02af9, type: 3}
   - {fileID: 1367090699571187051, guid: 99c3ec592490da3448a51e2e3dfa8df1, type: 3}
+  - {fileID: 5738110508794239546, guid: 663be1aaaf1892a4c843a61bcd47f9a6, type: 3}
+  - {fileID: 8248251280107583170, guid: 2ffcad93eb46a0d4bbdbb8f565321ac0, type: 3}
+  - {fileID: 1528097235495275341, guid: e2a5c65f54e9c794c8d94852269ddbc6, type: 3}
+  - {fileID: 5526401272892433861, guid: a532e8f55c4a8b44fa105fff1cbaeee5, type: 3}
+  numOfSegments: 4
   randomNum: 
 --- !u!1001 &969256484
 PrefabInstance:

@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelController : MonoBehaviour
 {
     public GameObject[] segments;
+    public int numOfSegments = 4;
     public int[] randomNum;
     private float _halfHeight = 12.0f;
 
@@ -12,7 +13,7 @@ public class LevelController : MonoBehaviour
     void Start()
     {
         //TODO установить правила рандома ???
-        randomNum = takeRandomSegments(4);
+        randomNum = takeRandomSegments(numOfSegments);
         float yPos = -12.0f;
         Vector3 position = new Vector3();
         for (int i = 0; i < randomNum.Length; i++)
@@ -55,7 +56,7 @@ public class LevelController : MonoBehaviour
         int[] segmentsNum = new int[num];
         for (int i = 0; i < num; i++)
         {
-            segmentsNum[i] = Random.Range(0, 7);
+            segmentsNum[i] = Random.Range(0, segments.Length);
         }
 
         return segmentsNum;

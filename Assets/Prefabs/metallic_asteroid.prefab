@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0a1b6798ce69647bd2379afefb9ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 1
+  rotateSpeed: 1.3
   centre: {x: 0, y: 10, z: 0}
   angle: 0
 --- !u!114 &4406256060574613476

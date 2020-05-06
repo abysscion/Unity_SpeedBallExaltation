@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7189847774455265161}
   - component: {fileID: 8544485076174168043}
   m_Layer: 0
-  m_Name: death_star_stable
+  m_Name: DeathStarStable
   m_TagString: RedBarrier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0a1b6798ce69647bd2379afefb9ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 2
+  rotateSpeed: 1.3
   centre: {x: 0, y: 6, z: 0}
   angle: 90
 --- !u!114 &8544485076174168043
