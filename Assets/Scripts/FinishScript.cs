@@ -4,6 +4,10 @@ public class FinishScript : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameController.StartNextLevel();
+        if (other.transform.CompareTag("Player"))
+        {
+            // GameController.StartNextLevel();
+            GameController.RestartLevel();
+        }
     }
 }
