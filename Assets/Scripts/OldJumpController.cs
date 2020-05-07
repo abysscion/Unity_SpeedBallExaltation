@@ -41,7 +41,7 @@ public class OldJumpController : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
             
-            if (GameController.currentGameState == GameController.GameState.Lose)
+            if (GameController.CurrentGameState == GameController.GameState.Lose)
             {
                 if (touch.phase == TouchPhase.Began)
                     GameController.RestartLevel();
@@ -57,7 +57,7 @@ public class OldJumpController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (GameController.currentGameState == GameController.GameState.Lose)
+            if (GameController.CurrentGameState == GameController.GameState.Lose)
             {
                 GameController.RestartLevel();
             }
@@ -156,7 +156,7 @@ public class OldJumpController : MonoBehaviour
         StickBall();
         _ballStickAnimator.Play("IdleStick");
         // _ballStickAnimator.Play("RetractStick"); это здесь не нужно, имхо, потому что мяч иначе будет падать во время состояния паузы
-        GameController.currentGameState = GameController.GameState.Lose;
+        GameController.CurrentGameState = GameController.GameState.Lose;
     }
 
     private void HitMetallicBarrier()

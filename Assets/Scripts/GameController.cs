@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
@@ -12,13 +13,14 @@ public class GameController : MonoBehaviour
         Menu
     }
 
-    public static GameState currentGameState;
+    public static GameState CurrentGameState;
+    public static GameSave CurrentSave { get; private set; }
+    
     private GameState _previousGameState;
     private GameObject _restartText;
     private GameObject _menuButton;
     private GameObject _chooseBallButton;
     private GameObject _panel;
-
 
     public static void RestartLevel()
     {
@@ -34,11 +36,21 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(nextIndex);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public static void SaveGame() //todo: exception handling system that prevents broken saves overwriting and etc
     {
+        var segs = new List<int>();
+        
+        for (var i = 0; i < 10; i++)
+            segs.Add(Random.Range(0, 9));
+        SaveManager.SaveGameToFile(CurrentSave);
+    }
+
+    private void Start()
+    {
+        if (CurrentSave == null)
+            CurrentSave = SaveManager.LoadGameFromFile() ?? new GameSave(new List<int>(), 0, 0);
         _previousGameState = GameState.StartGame;
-        currentGameState = GameState.StartGame;
+        CurrentGameState = GameState.StartGame;
         _restartText = GameObject.Find("RestartText");
         _menuButton = GameObject.Find("MenuButton");
         _chooseBallButton = GameObject.Find("ChooseBallButton");
@@ -49,24 +61,23 @@ public class GameController : MonoBehaviour
         _panel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (_previousGameState != currentGameState)
+        if (_previousGameState != CurrentGameState)
         {
-            _previousGameState = currentGameState;
-            if (currentGameState == GameState.Lose)
+            _previousGameState = CurrentGameState;
+            if (CurrentGameState == GameState.Lose)
             {
                 _panel.SetActive(true);
                 _restartText.SetActive(true);
             }
             
-            if (currentGameState == GameState.Win)
+            if (CurrentGameState == GameState.Win)
             {
                 WinLevel();
             }
 
-            if (currentGameState == GameState.InGame)
+            if (CurrentGameState == GameState.InGame)
             {
                 _menuButton.SetActive(false);
                 _chooseBallButton.SetActive(false);
@@ -77,6 +88,7 @@ public class GameController : MonoBehaviour
     private void WinLevel()
     {
         // TODO add timer
+        SaveGame();
         StartNextLevel();
     }
 }

@@ -61,7 +61,7 @@ public class JumpController : MonoBehaviour
     private void Update()
     {
         // TODO не двигать камеру вместе с оттягиванием мяча
-        if (GameController.currentGameState != GameController.GameState.Lose)
+        if (GameController.CurrentGameState != GameController.GameState.Lose)
             _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         if (!_ableToControl)
             return;
@@ -73,7 +73,7 @@ public class JumpController : MonoBehaviour
         if (touches.Count > 0)
         {
             var touch = touches[0];
-            if (GameController.currentGameState == GameController.GameState.Lose)
+            if (GameController.CurrentGameState == GameController.GameState.Lose)
                 if (touch.phase == TouchPhase.Began)
                     GameController.RestartLevel();
             if (isStick)
@@ -100,8 +100,8 @@ public class JumpController : MonoBehaviour
                 
                 if (force <= 0.0f) 
                     return;
-                if (GameController.currentGameState == GameController.GameState.StartGame)
-                    GameController.currentGameState = GameController.GameState.InGame;
+                if (GameController.CurrentGameState == GameController.GameState.StartGame)
+                    GameController.CurrentGameState = GameController.GameState.InGame;
                 UnstickBall();
                 Jump(force);
                 break;
@@ -141,7 +141,7 @@ public class JumpController : MonoBehaviour
     private void HitRedBarrier()
     {
         StickBall();
-        GameController.currentGameState = GameController.GameState.Lose;
+        GameController.CurrentGameState = GameController.GameState.Lose;
         UnstickBall();
     }
 
