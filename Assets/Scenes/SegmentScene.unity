@@ -208,20 +208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a6afa618b07a7f4fba5a756749e4560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segments:
-  - {fileID: 6475375935202330788, guid: 8550800a8194b53428ab8900e02a53b6, type: 3}
-  - {fileID: 3771613300051630290, guid: 5cf77ed231aa15a4fae53f9cb3e774dc, type: 3}
-  - {fileID: 8341789852395939582, guid: 89520140c5eb7eb4eb8722a84c50237c, type: 3}
-  - {fileID: 1812549661304966941, guid: c63382827d2609548b90681a96540490, type: 3}
-  - {fileID: 3699374167013100739, guid: f379ee452b664f44493697dec9d676a6, type: 3}
-  - {fileID: 1670538469957208037, guid: f2a92587d0c8daa4f81c774028a02af9, type: 3}
-  - {fileID: 1367090699571187051, guid: 99c3ec592490da3448a51e2e3dfa8df1, type: 3}
-  - {fileID: 5738110508794239546, guid: 663be1aaaf1892a4c843a61bcd47f9a6, type: 3}
-  - {fileID: 8248251280107583170, guid: 2ffcad93eb46a0d4bbdbb8f565321ac0, type: 3}
-  - {fileID: 1528097235495275341, guid: e2a5c65f54e9c794c8d94852269ddbc6, type: 3}
-  - {fileID: 5526401272892433861, guid: a532e8f55c4a8b44fa105fff1cbaeee5, type: 3}
-  numOfSegments: 4
-  randomNum: 
+  availableSegments: []
+  segmentsCountToUse: 4
+  generatedSegmentsIndexes: 
 --- !u!1001 &969256484
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -372,36 +361,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3de14ad95c1b9af4d8d8583ca9909dcc, type: 3}
---- !u!1 &1966008090
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1966008092}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1966008092
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966008090}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &500652082817715789
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
+[Serializable]
 public class GameSave
 {
+    [SerializeField]
     private List<int> _currentLevelSegments;
     public List<int> CurrentLevelSegments
     {
@@ -9,6 +13,7 @@ public class GameSave
         set => _currentLevelSegments = value ?? new List<int>();
     }
     
+    [SerializeField]
     private int _coinsCount;
     public int CoinsCount
     {
@@ -20,6 +25,7 @@ public class GameSave
         }
     }
 
+    [SerializeField]
     private int _totalLevelsComplete;
     public int TotalLevelsComplete
     {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,17 +14,20 @@ public class GameController : MonoBehaviour
     }
 
     public static GameState CurrentGameState;
-    public static GameSave CurrentSave { get; private set; }
+    public static GameSave CurrentSave { get; set; }
     
     private GameState _previousGameState;
     private GameObject _restartText;
     private GameObject _menuButton;
     private GameObject _chooseBallButton;
     private GameObject _panel;
+    
+    private static LevelController _levelControllerDude; //todo: remove it
 
     public static void RestartLevel()
     {
         var currentIndex = SceneManager.GetActiveScene().buildIndex;
+        SaveGame();
         SceneManager.LoadScene(currentIndex);
     }
     
@@ -38,17 +41,21 @@ public class GameController : MonoBehaviour
 
     public static void SaveGame() //todo: exception handling system that prevents broken saves overwriting and etc
     {
-        var segs = new List<int>();
-        
-        for (var i = 0; i < 10; i++)
-            segs.Add(Random.Range(0, 9));
+        CurrentSave.CurrentLevelSegments = _levelControllerDude.generatedSegmentsIndexes.ToList();
         SaveManager.SaveGameToFile(CurrentSave);
     }
 
     private void Start()
     {
+        if (_levelControllerDude == null)
+            _levelControllerDude = GameObject.Find("GameController").GetComponent<LevelController>();
         if (CurrentSave == null)
-            CurrentSave = SaveManager.LoadGameFromFile() ?? new GameSave(new List<int>(), 0, 0);
+            CurrentSave = SaveManager.LoadGameFromFile() ?? new GameSave(
+                _levelControllerDude.GenerateRandomIndexes(Random.Range(2, 4)).ToList(), 
+                0, 
+                0);
+        SetupScene();
+        
         _previousGameState = GameState.StartGame;
         CurrentGameState = GameState.StartGame;
         _restartText = GameObject.Find("RestartText");
@@ -59,6 +66,11 @@ public class GameController : MonoBehaviour
         _menuButton.SetActive(true);
         _chooseBallButton.SetActive(true);
         _panel.SetActive(false);
+    }
+
+    private void SetupScene()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void Update()
@@ -88,6 +100,7 @@ public class GameController : MonoBehaviour
     private void WinLevel()
     {
         // TODO add timer
+        CurrentSave.TotalLevelsComplete++;
         SaveGame();
         StartNextLevel();
     }

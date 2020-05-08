@@ -1,30 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 
 public class LevelController : MonoBehaviour
 {
-    public GameObject[] segments;
-    public int numOfSegments = 4;
-    public int[] randomNum;
-    private float _halfHeight = 12.0f;
+    public GameObject[] availableSegments;
+    public int segmentsCountToUse = 4;
+    public int[] generatedSegmentsIndexes;
 
-    // Start is called before the first frame update
-    void Start()
+    private const float HalfHeight = 12.0f;
+
+    private void Start()
     {
+        if (availableSegments.Length <= 0)
+            availableSegments = Resources.LoadAll<GameObject>("Prefabs/Segments");
+        if (GameController.CurrentSave == null)
+            GameController.CurrentSave = SaveManager.LoadGameFromFile() ?? new GameSave(
+                this.GenerateRandomIndexes(Random.Range(2, 4)).ToList(), 
+                0, 
+                0);
         //TODO установить правила рандома ???
-        randomNum = takeRandomSegments(numOfSegments);
-        float yPos = -12.0f;
-        Vector3 position = new Vector3();
-        for (int i = 0; i < randomNum.Length; i++)
+        var yPos = -HalfHeight;
+        
+        generatedSegmentsIndexes = GenerateRandomIndexes(segmentsCountToUse);
+        foreach (var index in generatedSegmentsIndexes)
         {
-            yPos = yPos + _halfHeight * 2;
-            position = new Vector3(0.0f, yPos, 0.0f);
-            Instantiate(segments[randomNum[i]], position, Quaternion.identity);
+            yPos += HalfHeight * 2;
+            Instantiate(availableSegments[index], new Vector3(0.0f, yPos, 0.0f), Quaternion.identity);
         }
     }
 
-    private int[] takeRandomSegments(int num)
+    public int[] GenerateRandomIndexes(int segmentsCount)
     {
         // if (num > segments.Length)
         //     return null;
@@ -51,15 +56,14 @@ public class LevelController : MonoBehaviour
         
         //TODO выборка неповторяющихся чисел ???
         
-        if (num > segments.Length)
-            return null;
-        int[] segmentsNum = new int[num];
-        for (int i = 0; i < num; i++)
-        {
-            segmentsNum[i] = Random.Range(0, segments.Length);
-        }
-
-        return segmentsNum;
+        // there is no problem yet imo bcs of repeatability
+        // if (segmentsCount > availableSegments.Length)
+        //     return null; 
+        
+        var indexesArr = new int[segmentsCount];
+        
+        for (var i = 0; i < segmentsCount; i++)
+            indexesArr[i] = Random.Range(0, availableSegments.Length);
+        return indexesArr;
     }
-    
 }

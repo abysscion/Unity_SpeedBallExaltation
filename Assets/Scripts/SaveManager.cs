@@ -21,6 +21,8 @@ public static class SaveManager
     
     public static GameSave LoadGameFromFile()
     {
+        if (!File.Exists(FilePath)) return null;
+        
         using (var fs = new FileStream(FilePath, FileMode.Open)) 
         using (var reader = new StreamReader(fs)) 
             return JsonUtility.FromJson<GameSave>(reader.ReadToEnd());
@@ -30,8 +32,12 @@ public static class SaveManager
     {
         if (save == null) return;
 
-        using (var fs = new FileStream(FilePath, FileMode.CreateNew))
+        using (var fs = new FileStream(FilePath, FileMode.Create))
         using (var writer = new StreamWriter(fs))
-            writer.Write(JsonUtility.ToJson(save, true));
+        {
+            var x = JsonUtility.ToJson(save, true);
+            var y = JsonUtility.ToJson(save);
+            writer.Write(x);
+        }
     }
 }
