@@ -14,10 +14,6 @@ public class JumpController : MonoBehaviour
     public bool canDrawDebug;
     public bool isStick;
 
-    private const float MagicalForceDivider = 40.0f; //idk how to name it
-    private const float MinSwipeLength = 200.0f;
-    private float _maxSwipeLength;
-
     private SkinnedMeshRenderer _bendingPoleRenderer;
     private Transform _cameraTransform;
     private Transform _jumperTransform;
@@ -27,7 +23,10 @@ public class JumpController : MonoBehaviour
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
     private Vector2 _firstTouchPos;
+    private const float MagicalForceDivider = 40.0f; //idk how to name it
+    private const float MinSwipeLength = 200.0f;
     [SerializeField] private float _defaultControlLockDelay = 0.3f;
+    private float _maxSwipeLength;
     private float _jumpMultiplier;
     private bool _ableToControl;
 
@@ -75,7 +74,7 @@ public class JumpController : MonoBehaviour
             var touch = touches[0];
             if (GameController.CurrentGameState == GameController.GameState.Lose)
                 if (touch.phase == TouchPhase.Began)
-                    GameController.RestartLevel();
+                    GameController.Instance.RestartLevel();
             if (isStick)
                 PrepareToJump(touch);
             else

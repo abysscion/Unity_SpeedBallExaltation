@@ -22,11 +22,8 @@ public class AsteroidExploder : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        
-        var jumper = other.gameObject.GetComponent<JumpController>();
-        var jumperRb = jumper.GetComponent<Rigidbody>();
-        
-        GameController.CurrentSave.CoinsCount++;
+
+        GameController.Instance.AddCoins(1);
         Destroy(this.gameObject, destroyTimer);
         foreach (var collider in GetComponentsInChildren<Collider>())
             collider.enabled = true;

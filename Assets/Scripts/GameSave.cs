@@ -5,43 +5,33 @@ using UnityEngine;
 [Serializable]
 public class GameSave
 {
-    [SerializeField]
-    private List<int> _currentLevelSegments;
-    public List<int> CurrentLevelSegments
+    [SerializeField] private List<int> _levelSegmentsIndexes;
+    [SerializeField] private int _coinsCount;
+    [SerializeField] private int _totalLevelsComplete;
+    
+    public List<int> LevelSegmentsIndexes
     {
-        get => _currentLevelSegments;
-        set => _currentLevelSegments = value ?? new List<int>();
+        get => _levelSegmentsIndexes;
+        set => _levelSegmentsIndexes = value ?? new List<int>();
     }
     
-    [SerializeField]
-    private int _coinsCount;
     public int CoinsCount
     {
         get => _coinsCount;
-        set
-        {
-            var newCount = _coinsCount + value;
-            _coinsCount = newCount <= 0 ? 0 : newCount;
-        }
+        set => _coinsCount = value < 0 ? 0 : value;
     }
 
-    [SerializeField]
-    private int _totalLevelsComplete;
     public int TotalLevelsComplete
     {
         get => _totalLevelsComplete;
-        set
-        {
-            var newCount = _totalLevelsComplete + value;
-            //complete level count couldn't be lower than previous? :/
-            _totalLevelsComplete = newCount <= _totalLevelsComplete ? _totalLevelsComplete : newCount;
-        }
+        //complete level count couldn't be lower than previous? :/
+        set => _totalLevelsComplete = value < _totalLevelsComplete ? _totalLevelsComplete : value;
     }
 
 
-    public GameSave(List<int> currentLevelSegments, int coinsCount, int totalLevelsComplete)
+    public GameSave(List<int> levelSegmentsIndexes, int coinsCount, int totalLevelsComplete)
     {
-        CurrentLevelSegments = currentLevelSegments;
+        LevelSegmentsIndexes = levelSegmentsIndexes;
         CoinsCount = coinsCount;
         TotalLevelsComplete = totalLevelsComplete;
     }

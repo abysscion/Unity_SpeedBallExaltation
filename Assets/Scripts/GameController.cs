@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -14,63 +14,57 @@ public class GameController : MonoBehaviour
     }
 
     public static GameState CurrentGameState;
-    public static GameSave CurrentSave { get; set; }
-    
+
     private GameState _previousGameState;
+    private GameObject _chooseBallButton;
+    private GameObject _coinsAmountText;
     private GameObject _restartText;
     private GameObject _menuButton;
-    private GameObject _chooseBallButton;
     private GameObject _panel;
-    
-    private static LevelController _levelControllerDude; //todo: remove it
 
-    public static void RestartLevel()
+    public static GameController Instance { get; private set; }
+
+
+    public void RestartLevel()
     {
-        var currentIndex = SceneManager.GetActiveScene().buildIndex;
-        SaveGame();
-        SceneManager.LoadScene(currentIndex);
-    }
-    
-    public static void StartNextLevel()
-    {
-        var currentIndex = SceneManager.GetActiveScene().buildIndex;
-        var nextIndex = SceneManager.sceneCountInBuildSettings > currentIndex + 1 ? currentIndex + 1 : 0;
-        
-        SceneManager.LoadScene(nextIndex);
+        SaveController.Instance.LoadGameFromFile();
+        SceneManager.LoadScene(1);
     }
 
-    public static void SaveGame() //todo: exception handling system that prevents broken saves overwriting and etc
+    public void StartNextLevel()
     {
-        CurrentSave.CurrentLevelSegments = _levelControllerDude.generatedSegmentsIndexes.ToList();
-        SaveManager.SaveGameToFile(CurrentSave);
+        SceneManager.LoadScene(1);
     }
 
-    private void Start()
+    public void AddCoins(int amount)
     {
-        if (_levelControllerDude == null)
-            _levelControllerDude = GameObject.Find("GameController").GetComponent<LevelController>();
-        if (CurrentSave == null)
-            CurrentSave = SaveManager.LoadGameFromFile() ?? new GameSave(
-                _levelControllerDude.GenerateRandomIndexes(Random.Range(2, 4)).ToList(), 
-                0, 
-                0);
-        SetupScene();
-        
-        _previousGameState = GameState.StartGame;
-        CurrentGameState = GameState.StartGame;
-        _restartText = GameObject.Find("RestartText");
-        _menuButton = GameObject.Find("MenuButton");
-        _chooseBallButton = GameObject.Find("ChooseBallButton");
-        _panel = GameObject.Find("Panel");
-        _restartText.SetActive(false);
-        _menuButton.SetActive(true);
-        _chooseBallButton.SetActive(true);
-        _panel.SetActive(false);
+        var newAmount = SaveController.Instance.Save.CoinsCount + amount;
+
+        if (newAmount < 0)
+            SaveController.Instance.Save.CoinsCount = amount < 0 ? 0 : int.MaxValue;
+        else
+            SaveController.Instance.Save.CoinsCount = newAmount;
+        //TODO: change gameobject for components
+        //TODO: adjust offset
+        _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
     }
 
-    private void SetupScene()
+    private void Awake()
     {
-        throw new System.NotImplementedException();
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Debug.Log("[ATTENTION] Multiple " + this + " found!");
+            return;
+        }
+
+        if (SaveController.Instance.Save == null)
+            SaveController.Instance.LoadGameFromFile();
+        if (SaveController.Instance.Save == null)
+            SaveController.Instance.SaveGameToFile();
+        SceneManager.sceneLoaded += SetUpLoadedScene;
+        SceneManager.LoadScene(1);
     }
 
     private void Update()
@@ -83,7 +77,7 @@ public class GameController : MonoBehaviour
                 _panel.SetActive(true);
                 _restartText.SetActive(true);
             }
-            
+
             if (CurrentGameState == GameState.Win)
             {
                 WinLevel();
@@ -97,11 +91,50 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void SetUpLoadedScene(Scene scene, LoadSceneMode mode)
+    {
+        _previousGameState = GameState.StartGame;
+        CurrentGameState = GameState.StartGame;
+        InitUI();
+
+        if (SaveController.Instance.Save.LevelSegmentsIndexes.Count <= 0)
+        {
+            Debug.Log("[ATTENTION] Level segments indexes array was empty. This should not have happened ");
+            SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
+        }
+
+        LevelController.Instance.SetUpScene();
+    }
+
     private void WinLevel()
     {
         // TODO add timer
-        CurrentSave.TotalLevelsComplete++;
-        SaveGame();
+        SaveController.Instance.Save.TotalLevelsComplete++;
+        SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
+        SaveController.Instance.SaveGameToFile();
         StartNextLevel();
+    }
+
+    private void InitUI()
+    {
+        _chooseBallButton = GameObject.Find("ChooseBallButton");
+        _coinsAmountText = GameObject.Find("CoinsAmountText");
+        _restartText = GameObject.Find("RestartText");
+        _menuButton = GameObject.Find("MenuButton");
+        _panel = GameObject.Find("Panel");
+
+        if (!(_restartText && _menuButton && _chooseBallButton && _panel && _coinsAmountText))
+        {
+            Debug.Log("[note] Check how to fix me ffs.");
+            return;
+        }
+
+        _restartText.SetActive(false);
+        _menuButton.SetActive(true);
+        _chooseBallButton.SetActive(true);
+        _panel.SetActive(false);
+        //TODO: change gameobject for components
+        //TODO: adjust offset
+        _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
     }
 }
