@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DeathStarScript : MonoBehaviour
 {
@@ -7,7 +6,7 @@ public class DeathStarScript : MonoBehaviour
     {
         if (other.transform.CompareTag("Player"))
         {
-            GameController.currentGameState = GameController.GameState.Lose;
+            GameController.CurrentGameState = GameController.GameState.Lose;
         }
     }
 }

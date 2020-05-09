@@ -6,8 +6,7 @@ public class FinishScript : MonoBehaviour
     {
         if (other.transform.CompareTag("Player"))
         {
-            // GameController.StartNextLevel();
-            GameController.RestartLevel();
+            GameController.CurrentGameState = GameController.GameState.Win;
         }
     }
 }

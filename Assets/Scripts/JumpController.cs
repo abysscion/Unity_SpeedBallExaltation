@@ -14,10 +14,6 @@ public class JumpController : MonoBehaviour
     public bool canDrawDebug;
     public bool isStick;
 
-    private const float MagicalForceDivider = 40.0f; //idk how to name it
-    private const float MinSwipeLength = 200.0f;
-    private float _maxSwipeLength;
-
     private SkinnedMeshRenderer _bendingPoleRenderer;
     private Transform _cameraTransform;
     private Transform _jumperTransform;
@@ -27,7 +23,10 @@ public class JumpController : MonoBehaviour
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
     private Vector2 _firstTouchPos;
+    private const float MagicalForceDivider = 40.0f; //idk how to name it
+    private const float MinSwipeLength = 200.0f;
     [SerializeField] private float _defaultControlLockDelay = 0.3f;
+    private float _maxSwipeLength;
     private float _jumpMultiplier;
     private bool _ableToControl;
 
@@ -61,7 +60,7 @@ public class JumpController : MonoBehaviour
     private void Update()
     {
         // TODO не двигать камеру вместе с оттягиванием мяча
-        if (GameController.currentGameState != GameController.GameState.Lose)
+        if (GameController.CurrentGameState != GameController.GameState.Lose)
             _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
         if (!_ableToControl)
             return;
@@ -73,9 +72,9 @@ public class JumpController : MonoBehaviour
         if (touches.Count > 0)
         {
             var touch = touches[0];
-            if (GameController.currentGameState == GameController.GameState.Lose)
+            if (GameController.CurrentGameState == GameController.GameState.Lose)
                 if (touch.phase == TouchPhase.Began)
-                    GameController.RestartLevel();
+                    GameController.Instance.RestartLevel();
             if (isStick)
                 PrepareToJump(touch);
             else
@@ -100,8 +99,8 @@ public class JumpController : MonoBehaviour
                 
                 if (force <= 0.0f) 
                     return;
-                if (GameController.currentGameState == GameController.GameState.StartGame)
-                    GameController.currentGameState = GameController.GameState.InGame;
+                if (GameController.CurrentGameState == GameController.GameState.StartGame)
+                    GameController.CurrentGameState = GameController.GameState.InGame;
                 UnstickBall();
                 Jump(force);
                 break;
@@ -141,7 +140,7 @@ public class JumpController : MonoBehaviour
     private void HitRedBarrier()
     {
         StickBall();
-        GameController.currentGameState = GameController.GameState.Lose;
+        GameController.CurrentGameState = GameController.GameState.Lose;
         UnstickBall();
     }
 
