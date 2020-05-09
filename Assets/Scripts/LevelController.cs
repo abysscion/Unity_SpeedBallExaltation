@@ -1,31 +1,57 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LevelController : MonoBehaviour
 {
-    public GameObject[] segments;
-    public int numOfSegments = 4;
-    public int[] randomNum;
-    private float _halfHeight = 12.0f;
+    public const int DefaultSegmentsCountToUse = 4;
+    public const float HalfHeight = 12.0f;
+    
+    public static LevelController Instance { get; private set; }
+    public GameObject[] AvailableSegments { get; private set; }
 
-    // Start is called before the first frame update
-    void Start()
+
+    public List<int> GenerateRandomIndexes()
     {
-        //TODO установить правила рандома ???
-        randomNum = takeRandomSegments(numOfSegments);
-        float yPos = -12.0f;
-        Vector3 position = new Vector3();
-        for (int i = 0; i < randomNum.Length; i++)
+        return GenerateRandomIndexes(DefaultSegmentsCountToUse);
+    }
+    
+    public List<int> GenerateRandomIndexes(int segmentsCount)
+    {
+        //TODO выборка неповторяющихся чисел ???
+        var indexesList = new List<int>();
+
+        for (var i = 0; i < segmentsCount; i++)
+            indexesList.Add(Random.Range(0, AvailableSegments.Length));
+        return indexesList;
+    }
+
+    public void SetUpScene()
+    {
+        var yPos = -HalfHeight;
+
+        foreach (var index in SaveController.Instance.Save.LevelSegmentsIndexes)
         {
-            yPos = yPos + _halfHeight * 2;
-            position = new Vector3(0.0f, yPos, 0.0f);
-            Instantiate(segments[randomNum[i]], position, Quaternion.identity);
+            yPos += HalfHeight * 2;
+            Instantiate(AvailableSegments[index], new Vector3(0.0f, yPos, 0.0f), Quaternion.identity);
         }
     }
 
-    private int[] takeRandomSegments(int num)
+    private void Awake()
     {
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Debug.Log("[ATTENTION] Multiple " + this + " found!");
+            return;
+        }
+        
+        AvailableSegments = Resources.LoadAll<GameObject>("Prefabs/Segments");
+    }
+}
+
+/*
         // if (num > segments.Length)
         //     return null;
         // int[] segmentsNum = new int[num];
@@ -48,18 +74,4 @@ public class LevelController : MonoBehaviour
         // }
         //
         // return segmentsNum;
-        
-        //TODO выборка неповторяющихся чисел ???
-        
-        if (num > segments.Length)
-            return null;
-        int[] segmentsNum = new int[num];
-        for (int i = 0; i < num; i++)
-        {
-            segmentsNum[i] = Random.Range(0, segments.Length);
-        }
-
-        return segmentsNum;
-    }
-    
-}
+ */
