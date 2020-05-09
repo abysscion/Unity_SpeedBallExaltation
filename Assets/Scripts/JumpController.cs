@@ -62,7 +62,8 @@ public class JumpController : MonoBehaviour
         // TODO не двигать камеру вместе с оттягиванием мяча
         if (GameController.CurrentGameState != GameController.GameState.Lose)
             _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
-        if (!_ableToControl)
+        if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall 
+        || GameController.CurrentGameState == GameController.GameState.Menu)
             return;
         
         // if (Input.touchCount > 0) //TODO: replace on release
