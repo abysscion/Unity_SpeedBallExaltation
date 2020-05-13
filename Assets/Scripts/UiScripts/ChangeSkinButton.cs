@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Controllers;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace UiScripts
