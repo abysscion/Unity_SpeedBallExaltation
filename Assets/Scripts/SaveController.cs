@@ -35,7 +35,7 @@ public class SaveController : MonoBehaviour
     public void SaveGameToFile()
     {
         if (Save == null)
-            Save = new GameSave(new List<int>(), 0, 0);
+            Save = new GameSave();
 
         using (var fs = new FileStream(FilePath, FileMode.Create))
         using (var writer = new StreamWriter(fs))
