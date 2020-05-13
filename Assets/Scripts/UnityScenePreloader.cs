@@ -7,7 +7,7 @@ public static class UnityScenePreloader
 #if UNITY_EDITOR 
     public static int otherScene = -2;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        //[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void InitLoadingScene()
     {
         Debug.Log("InitLoadingScene()");

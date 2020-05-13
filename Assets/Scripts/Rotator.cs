@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Rotator : MonoBehaviour
 {
@@ -11,9 +13,9 @@ public class Rotator : MonoBehaviour
 
     private void Start()
     {
-        xRotator = xRotator <= 0.0f ? Random.Range(0, 90) : xRotator;
-        yRotator = yRotator <= 0.0f ? Random.Range(0, 90) : yRotator;
-        zRotator = zRotator <= 0.0f ? Random.Range(0, 90) : zRotator;
+        xRotator = Math.Abs(xRotator) < 0.0001f ? Random.Range(-90, 90) : xRotator;
+        yRotator = Math.Abs(yRotator) < 0.0001f ? Random.Range(-90, 90) : yRotator;
+        zRotator = Math.Abs(zRotator) < 0.0001f ? Random.Range(-90, 90) : zRotator;
     }
 
     private void Update()

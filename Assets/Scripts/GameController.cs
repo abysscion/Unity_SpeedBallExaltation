@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ public class GameController : MonoBehaviour
         Lose,
         Win,
         Menu,
-        ChooseBall
+        ChooseBall,
+        ChooseReward,
+        RewardChosen
     }
 
     public static GameState CurrentGameState;
@@ -76,48 +79,50 @@ public class GameController : MonoBehaviour
         if (_previousGameState != CurrentGameState)
         {
             _previousGameState = CurrentGameState;
-            if (_previousGameState == GameState.StartGame)
+            switch (CurrentGameState)
             {
-                Time.timeScale = 1;
-                _backButton.SetActive(false);
-                _ballChooser.SetActive(false);
-                _menuButton.SetActive(true);
-                _chooseBallButton.SetActive(true);
-                _panel.SetActive(false);
-            }
-            if (CurrentGameState == GameState.ChooseBall)
-            {
-                Time.timeScale = 0;
-                _backButton.SetActive(true);
-                _ballChooser.SetActive(true);
-                _menuButton.SetActive(false);
-                _chooseBallButton.SetActive(false);
-                _panel.SetActive(true);
-            }
-
-            if (CurrentGameState == GameState.Menu)
-            {
-                Time.timeScale = 0;
-                _backButton.SetActive(true);
-                _menuButton.SetActive(false);
-                _chooseBallButton.SetActive(false);
-                _panel.SetActive(true);
-            }
-            if (CurrentGameState == GameState.Lose)
-            {
-                _panel.SetActive(true);
-                _restartText.SetActive(true);
-            }
-
-            if (CurrentGameState == GameState.Win)
-            {
-                WinLevel();
-            }
-
-            if (CurrentGameState == GameState.InGame)
-            {
-                _menuButton.SetActive(false);
-                _chooseBallButton.SetActive(false);
+                case GameState.StartGame:
+                    Time.timeScale = 1;
+                    _backButton.SetActive(false);
+                    _ballChooser.SetActive(false);
+                    _menuButton.SetActive(true);
+                    _chooseBallButton.SetActive(true);
+                    _panel.SetActive(false);
+                    break;
+                case GameState.ChooseBall:
+                    Time.timeScale = 0;
+                    _backButton.SetActive(true);
+                    _ballChooser.SetActive(true);
+                    _menuButton.SetActive(false);
+                    _chooseBallButton.SetActive(false);
+                    _panel.SetActive(true);
+                    break;
+                case GameState.Menu:
+                    Time.timeScale = 0;
+                    _backButton.SetActive(true);
+                    _menuButton.SetActive(false);
+                    _chooseBallButton.SetActive(false);
+                    _panel.SetActive(true);
+                    break;
+                case GameState.Lose:
+                    _panel.SetActive(true);
+                    _restartText.SetActive(true);
+                    break;
+                case GameState.Win:
+                    WinLevel();
+                    //play animation of smth
+                    break;
+                case GameState.InGame:
+                    _menuButton.SetActive(false);
+                    _chooseBallButton.SetActive(false);
+                    break;
+                case GameState.ChooseReward:
+                    ShowRewardScreen();
+                    break;
+                case GameState.RewardChosen:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -143,7 +148,19 @@ public class GameController : MonoBehaviour
         SaveController.Instance.Save.TotalLevelsComplete++;
         SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
         SaveController.Instance.SaveGameToFile();
-        StartNextLevel();
+        CurrentGameState = GameState.ChooseReward;
+    }
+
+    private void ShowRewardScreen()
+    {
+        var sceneObjects = GameObject.FindObjectsOfType<GameObject>();
+        var cameraTransform = Camera.main.transform;
+
+        foreach (var obj in sceneObjects)
+            if (obj != this.gameObject)
+                obj.SetActive(false);
+
+        Instantiate(Resources.Load("Prefabs/asteroid_0"), cameraTransform.position + cameraTransform.forward, Quaternion.identity);
     }
 
     private void InitUI()
