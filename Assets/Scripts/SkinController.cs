@@ -14,7 +14,11 @@ public class SkinController : MonoBehaviour
     
     public static string ButtonPressed;
 
-    public int skinPrice = 100;
+    private static int _price1= 100;
+    private static int _price2= 200;
+    private static int _price3= 400;
+    private static int _price4= 600;
+    private static int _price5= 1000;
     private Material[] _skins;
     private Sprite[] _sprites;
     private Material[] _mats;
@@ -107,8 +111,21 @@ public class SkinController : MonoBehaviour
 
     private bool AbleToBuy(int num)
     {
-        if (SaveController.Instance.Save.CoinsCount > skinPrice)
+        int coins = SaveController.Instance.Save.CoinsCount;
+        int cost = 0;
+        if (num < 3)
+            cost = _price1;
+        else if (num < 6)
+            cost = _price2;
+        else if (num == 6)
+            cost = _price3;
+        else if (num == 7)
+            cost = _price4;
+        else
+            cost = _price5;
+        if (coins >= cost)
         {
+            GameController.Instance.AddCoins(-cost);
             return true;
         }
 
@@ -122,7 +139,6 @@ public class SkinController : MonoBehaviour
         SaveController.Instance.Save.PurchasedSkins = _purchasedSkins;
         buttons[num].GetComponent<Image>().sprite = _sprites[num];
         SetPlanetName(num);
-        GameController.Instance.AddCoins(-skinPrice);
         SaveController.Instance.SaveGameToFile();
     }
 

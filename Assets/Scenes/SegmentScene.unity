@@ -318,15 +318,14 @@ MonoBehaviour:
   - {fileID: 1967076569}
   planetNames:
   - Earth
-  - Jupiter
+  - Uranus
+  - Moon
+  - Venus
+  - Neptune
   - Mercury
   - Mars
-  - Moon
-  - Neptune
+  - Jupiter
   - Sun
-  - Uranus
-  - Venus
-  skinPrice: 100
 --- !u!1 &1041263237 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577246181846333603, guid: f561571edec18494596fb8e02782dd1d,
