@@ -23,12 +23,14 @@ public class JumpController : MonoBehaviour
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
     private Vector2 _firstTouchPos;
-    private const float MagicalForceDivider = 40.0f; //idk how to name it
-    private const float MinSwipeLength = 200.0f;
-    [SerializeField] private float _defaultControlLockDelay = 0.3f;
+    private const float MagicalForceDivider = 20.0f; //idk how to name it
+    private const float MinSwipeLength = 100.0f;
+    [SerializeField] private float _defaultControlLockDelay = 0.2f;
     private float _maxSwipeLength;
     private float _jumpMultiplier;
     private bool _ableToControl;
+    private const int MetallicBarrierPause = 6; // 1/10 секунды
+    private int _metallicTimer;
 
     public void UnstickBall()
     {
@@ -43,6 +45,7 @@ public class JumpController : MonoBehaviour
     
     private void Start()
     {
+        // Application.targetFrameRate = 60;
         _maxSwipeLength = forceLimit * MagicalForceDivider;
         bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
         bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
@@ -65,6 +68,13 @@ public class JumpController : MonoBehaviour
         if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall 
         || GameController.CurrentGameState == GameController.GameState.Menu)
             return;
+        if (_metallicTimer != 0)
+        {
+            _metallicTimer--;
+            if (_metallicTimer == 0)
+                UnstickBall();
+            return;
+        }
         
         // if (Input.touchCount > 0) //TODO: replace on release
         // {
@@ -122,6 +132,7 @@ public class JumpController : MonoBehaviour
                     break;
                 case "MetallicBarrier":
                     HitMetallicBarrier();
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
                 case "RedBarrier":
                     HitRedBarrier();
@@ -147,12 +158,14 @@ public class JumpController : MonoBehaviour
 
     private void HitMetallicBarrier()
     {
-        // StickBall(); //TODO: someday it could be done properly
+        StickBall();
+        _metallicTimer = MetallicBarrierPause;
+        //TODO: someday it could be done properly
         // StartCoroutine(nameof(TimedUnstickControl));
-        
+
         //TODO: animation
-        _jumperRb.velocity = Vector3.zero;
-        UnstickBall();
+        // _jumperRb.velocity = Vector3.zero;
+        // UnstickBall();
     }
 
     private void HitJumpBooster()
@@ -241,9 +254,12 @@ public class JumpController : MonoBehaviour
     private void MoveBallToJumpHigher(Touch touch)
     {
         var swipeLength = _firstTouchPos.y - touch.position.y;
-
+        
         if (swipeLength < MinSwipeLength)
+        {
+            _jumperRb.position = _ballPositionOnTouch;
             return;
+        }
         if (swipeLength < _maxSwipeLength)
         {
             swipeLength -= MinSwipeLength;
