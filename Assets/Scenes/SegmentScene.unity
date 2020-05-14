@@ -326,6 +326,18 @@ MonoBehaviour:
   - Mars
   - Jupiter
   - Sun
+--- !u!114 &969256495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 969256485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7444a5b2facf741980d9b209aa8664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1041263237 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577246181846333603, guid: f561571edec18494596fb8e02782dd1d,

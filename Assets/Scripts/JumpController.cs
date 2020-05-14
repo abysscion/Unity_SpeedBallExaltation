@@ -241,9 +241,7 @@ public class JumpController : MonoBehaviour
     private void MoveBallToJumpHigher(Touch touch)
     {
         var swipeLength = _firstTouchPos.y - touch.position.y;
-
-        if (swipeLength <= 0)
-            return;
+        
         if (swipeLength < MinSwipeLength)
         {
             _jumperRb.position = _ballPositionOnTouch;
