@@ -67,6 +67,7 @@ public class GameController : MonoBehaviour
             SaveController.Instance.LoadGameFromFile();
         if (SaveController.Instance.Save == null)
             SaveController.Instance.SaveGameToFile();
+        Application.targetFrameRate = 60;
         SceneManager.sceneLoaded += SetUpLoadedScene;
         SceneManager.LoadScene(1);
     }

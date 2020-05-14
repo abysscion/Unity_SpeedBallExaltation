@@ -29,6 +29,8 @@ public class JumpController : MonoBehaviour
     private float _maxSwipeLength;
     private float _jumpMultiplier;
     private bool _ableToControl;
+    private const int MetallicBarrierPause = 6; // 1/10 секунды
+    private int _metallicTimer;
 
     public void UnstickBall()
     {
@@ -43,6 +45,7 @@ public class JumpController : MonoBehaviour
     
     private void Start()
     {
+        // Application.targetFrameRate = 60;
         _maxSwipeLength = forceLimit * MagicalForceDivider;
         bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
         bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
@@ -65,6 +68,13 @@ public class JumpController : MonoBehaviour
         if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall 
         || GameController.CurrentGameState == GameController.GameState.Menu)
             return;
+        if (_metallicTimer != 0)
+        {
+            _metallicTimer--;
+            if (_metallicTimer == 0)
+                UnstickBall();
+            return;
+        }
         
         // if (Input.touchCount > 0) //TODO: replace on release
         // {
@@ -122,6 +132,7 @@ public class JumpController : MonoBehaviour
                     break;
                 case "MetallicBarrier":
                     HitMetallicBarrier();
+                    SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
                     break;
                 case "RedBarrier":
                     HitRedBarrier();
@@ -147,12 +158,14 @@ public class JumpController : MonoBehaviour
 
     private void HitMetallicBarrier()
     {
-        // StickBall(); //TODO: someday it could be done properly
+        StickBall();
+        _metallicTimer = MetallicBarrierPause;
+        //TODO: someday it could be done properly
         // StartCoroutine(nameof(TimedUnstickControl));
-        
+
         //TODO: animation
-        _jumperRb.velocity = Vector3.zero;
-        UnstickBall();
+        // _jumperRb.velocity = Vector3.zero;
+        // UnstickBall();
     }
 
     private void HitJumpBooster()
