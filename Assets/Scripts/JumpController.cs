@@ -23,9 +23,9 @@ public class JumpController : MonoBehaviour
     private Vector3 _ballPositionOnTouch;
     private Vector3 _ballPullingStep;
     private Vector2 _firstTouchPos;
-    private const float MagicalForceDivider = 40.0f; //idk how to name it
-    private const float MinSwipeLength = 200.0f;
-    [SerializeField] private float _defaultControlLockDelay = 0.3f;
+    private const float MagicalForceDivider = 20.0f; //idk how to name it
+    private const float MinSwipeLength = 100.0f;
+    [SerializeField] private float _defaultControlLockDelay = 0.2f;
     private float _maxSwipeLength;
     private float _jumpMultiplier;
     private bool _ableToControl;
@@ -242,8 +242,13 @@ public class JumpController : MonoBehaviour
     {
         var swipeLength = _firstTouchPos.y - touch.position.y;
 
-        if (swipeLength < MinSwipeLength)
+        if (swipeLength <= 0)
             return;
+        if (swipeLength < MinSwipeLength)
+        {
+            _jumperRb.position = _ballPositionOnTouch;
+            return;
+        }
         if (swipeLength < _maxSwipeLength)
         {
             swipeLength -= MinSwipeLength;
