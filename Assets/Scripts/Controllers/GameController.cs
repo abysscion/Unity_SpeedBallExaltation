@@ -16,7 +16,6 @@ namespace Controllers
             Menu,
             ChooseBall,
             ChooseReward,
-            RewardChosen
         }
 
         public static GameState CurrentGameState;
@@ -44,7 +43,7 @@ namespace Controllers
             SceneManager.LoadScene(1);
         }
 
-        public void AddCoins(int amount)
+        public void AddCoins(int amount, Text txtComponent)
         {
             var newAmount = SaveController.Instance.Save.CoinsCount + amount;
 
@@ -54,7 +53,7 @@ namespace Controllers
                 SaveController.Instance.Save.CoinsCount = newAmount;
             //TODO: change gameobject for components
             //TODO: adjust offset
-            _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
+            txtComponent.text = "Coins: " + SaveController.Instance.Save.CoinsCount;
         }
 
         private void Awake()
@@ -118,9 +117,8 @@ namespace Controllers
                         _chooseBallButton.SetActive(false);
                         break;
                     case GameState.ChooseReward:
-                        ShowRewardScreen();
-                        break;
-                    case GameState.RewardChosen:
+                        SceneManager.sceneLoaded -= SetUpLoadedScene;
+                        SceneManager.LoadScene(2);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -128,7 +126,7 @@ namespace Controllers
             }
         }
 
-        private void SetUpLoadedScene(Scene scene, LoadSceneMode mode)
+        public void SetUpLoadedScene(Scene scene, LoadSceneMode mode)
         {
             _previousGameState = GameState.StartGame;
             CurrentGameState = GameState.StartGame;
@@ -150,18 +148,6 @@ namespace Controllers
             SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
             SaveController.Instance.SaveGameToFile();
             CurrentGameState = GameState.ChooseReward;
-        }
-
-        private void ShowRewardScreen()
-        {
-            var sceneObjects = GameObject.FindObjectsOfType<GameObject>();
-            var cameraTransform = Camera.main.transform;
-
-            foreach (var obj in sceneObjects)
-                if (obj != this.gameObject)
-                    obj.SetActive(false);
-
-            Instantiate(Resources.Load("Prefabs/asteroid_0"), cameraTransform.position + cameraTransform.forward, Quaternion.identity);
         }
 
         private void InitUI()
