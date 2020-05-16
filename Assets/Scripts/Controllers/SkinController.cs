@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace Controllers
 {
+    //TODO: terrible buttons and planets naming allocating system atm. should be reworked really.
+    //4example: new instance of skincontroller on other scene would be empty and the one trying
+    //    to restore it would suffer a lot (I DID). 
     public class SkinController : MonoBehaviour
     {
         [SerializeField]

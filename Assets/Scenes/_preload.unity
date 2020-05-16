@@ -131,9 +131,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1051705066}
   - component: {fileID: 1051705065}
+  - component: {fileID: 1051705064}
   - component: {fileID: 1051705063}
   - component: {fileID: 1051705062}
-  - component: {fileID: 1051705064}
   m_Layer: 0
   m_Name: __app
   m_TagString: Untagged
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1051705061}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ca625ea1f1a4fc6b39736a3bab6da03, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fc3810de9505d64ebfff26a9de8afb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1051705063
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1051705061}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2530c0ffcc54c34eabda199b2216ab6, type: 3}
+  m_Script: {fileID: 11500000, guid: eea57e599cf43f446a59c3d288d83dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1051705065
