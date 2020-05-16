@@ -8,6 +8,8 @@ public class GameSave
     [SerializeField] private List<int> _levelSegmentsIndexes;
     [SerializeField] private int _coinsCount;
     [SerializeField] private int _totalLevelsComplete;
+    [SerializeField] private int _playerSkin;
+    [SerializeField] private List<bool> _purchasedSkins;
     
     public List<int> LevelSegmentsIndexes
     {
@@ -28,11 +30,33 @@ public class GameSave
         set => _totalLevelsComplete = value < _totalLevelsComplete ? _totalLevelsComplete : value;
     }
 
+    public int PlayerSkin
+    {
+        get => _playerSkin;
+        set => _playerSkin = value;
+    }
 
-    public GameSave(List<int> levelSegmentsIndexes, int coinsCount, int totalLevelsComplete)
+    public List<bool> PurchasedSkins
+    {
+        get => _purchasedSkins;
+        set => _purchasedSkins = value;
+    }
+
+    public GameSave()
+    {
+        LevelSegmentsIndexes = new List<int>();
+        CoinsCount = 0;
+        TotalLevelsComplete = 0;
+        _playerSkin = 0;
+        PurchasedSkins = new List<bool>() {true, false, false, false, false, false, false, false, false};
+    }
+    
+    public GameSave(List<int> levelSegmentsIndexes, int coinsCount, int totalLevelsComplete, int playerSkin, List<bool> purchasedSkins)
     {
         LevelSegmentsIndexes = levelSegmentsIndexes;
         CoinsCount = coinsCount;
         TotalLevelsComplete = totalLevelsComplete;
+        PlayerSkin = playerSkin;
+        PurchasedSkins = purchasedSkins;
     }
 }

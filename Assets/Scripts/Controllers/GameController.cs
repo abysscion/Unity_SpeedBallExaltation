@@ -43,6 +43,7 @@ namespace Controllers
             SceneManager.LoadScene(1);
         }
 
+        //TODO: move method to save controller
         public void AddCoins(int amount, Text txtComponent)
         {
             var newAmount = SaveController.Instance.Save.CoinsCount + amount;
@@ -70,6 +71,7 @@ namespace Controllers
                 SaveController.Instance.LoadGameFromFile();
             if (SaveController.Instance.Save == null)
                 SaveController.Instance.SaveGameToFile();
+            Application.targetFrameRate = 60;
             SceneManager.sceneLoaded += SetUpLoadedScene;
             SceneManager.LoadScene(1);
         }

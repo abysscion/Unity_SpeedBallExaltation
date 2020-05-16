@@ -796,7 +796,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Venus
+  m_Text: 1000
 --- !u!1 &5312100388491723568
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,7 +811,7 @@ GameObject:
   - component: {fileID: 5312100388491723571}
   - component: {fileID: 5312100388491723570}
   m_Layer: 5
-  m_Name: 2
+  m_Name: 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -863,7 +863,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0e2b1cb1b6009d44bb4de78429101379, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1005,7 +1005,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Uranus
+  m_Text: 600
 --- !u!1 &5312100388529978220
 GameObject:
   m_ObjectHideFlags: 0
@@ -1020,7 +1020,7 @@ GameObject:
   - component: {fileID: 5312100388529978223}
   - component: {fileID: 5312100388529978222}
   m_Layer: 5
-  m_Name: 3
+  m_Name: 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: d0197315a32b923489fc853aa57adbdb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1152,7 +1152,7 @@ GameObject:
   - component: {fileID: 5312100388560224287}
   - component: {fileID: 5312100388560224286}
   m_Layer: 5
-  m_Name: 1
+  m_Name: 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1284,7 +1284,7 @@ GameObject:
   - component: {fileID: 5312100388563212061}
   - component: {fileID: 8060227698959742230}
   m_Layer: 5
-  m_Name: 4
+  m_Name: 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1336,7 +1336,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ac1dd277116c1004bba146a74d3dc893, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1416,7 +1416,7 @@ GameObject:
   - component: {fileID: 5312100388629804361}
   - component: {fileID: 8704311240309906709}
   m_Layer: 5
-  m_Name: 9
+  m_Name: 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1468,7 +1468,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 57a25e5ef4f7c6e439205cd8ac4b9471, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1592,7 +1592,7 @@ GameObject:
   - component: {fileID: 5312100389088776045}
   - component: {fileID: 8275072699405196995}
   m_Layer: 5
-  m_Name: 8
+  m_Name: 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1644,7 +1644,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2c06d6ff22a178e49bcaeed60ec730e5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1786,7 +1786,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Sun
+  m_Text: 400
 --- !u!1 &5312100389280602902
 GameObject:
   m_ObjectHideFlags: 0
@@ -1801,7 +1801,7 @@ GameObject:
   - component: {fileID: 5312100389280602896}
   - component: {fileID: 2173639129292406744}
   m_Layer: 5
-  m_Name: 7
+  m_Name: 6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 36b621abcadf3a147bfd0a715369bbed, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1933,7 +1933,7 @@ GameObject:
   - component: {fileID: 5312100389352237878}
   - component: {fileID: 4151305765057379573}
   m_Layer: 5
-  m_Name: 6
+  m_Name: 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1985,7 +1985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6bb9d0c34d546be41bc9ffcbc169af5e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2127,7 +2127,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Jupiter
+  m_Text: 100
 --- !u!1 &5312100389568147407
 GameObject:
   m_ObjectHideFlags: 0
@@ -2204,7 +2204,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Neptune
+  m_Text: 200
 --- !u!1 &5312100389789203210
 GameObject:
   m_ObjectHideFlags: 0
@@ -2281,7 +2281,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Mars
+  m_Text: 200
 --- !u!1 &5312100389842623489
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,7 +2358,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Moon
+  m_Text: 200
 --- !u!1 &5312100390038666059
 GameObject:
   m_ObjectHideFlags: 0
@@ -2435,7 +2435,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Mercury
+  m_Text: 100
 --- !u!1 &5312100390095917414
 GameObject:
   m_ObjectHideFlags: 0
@@ -2450,7 +2450,7 @@ GameObject:
   - component: {fileID: 5312100390095917408}
   - component: {fileID: 2692056655437575422}
   m_Layer: 5
-  m_Name: 5
+  m_Name: 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2502,7 +2502,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c0c55e6e55c5be64e85cc0d83ac2751b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a02f0fd6a9bb6504bb30f1d8a859be41, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
