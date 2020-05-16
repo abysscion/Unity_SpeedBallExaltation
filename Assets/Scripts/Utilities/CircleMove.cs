@@ -6,11 +6,12 @@ namespace Utilities
 {
     public class CircleMove : MonoBehaviour
     {
-        public float rotateSpeed = 1f;
         public Vector3 centre = new Vector3(0.0f, 1.5f, 0.0f);
+        public float rotateSpeed = 1f;
         public float angle = 90.0f;
-        private const float Radius = 2f;
 
+        private const float Radius = 2f;
+        
         private void Start()
         {
             angle *= Mathf.Deg2Rad;

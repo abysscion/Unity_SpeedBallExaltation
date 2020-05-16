@@ -9,22 +9,21 @@ namespace Controllers
     //    to restore it would suffer a lot (I DID). 
     public class SkinController : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject[] buttons;
-        [SerializeField]
-        private string[] planetNames;
-    
         public static string ButtonPressed;
 
-        private static int _price1= 100;
-        private static int _price2= 200;
-        private static int _price3= 400;
-        private static int _price4= 600;
-        private static int _price5= 1000;
+        [SerializeField]
+        private GameObject[] buttons;
         private Material[] _skins;
-        private Sprite[] _sprites;
         private Material[] _mats;
+        private Sprite[] _sprites;
         private List<bool> _purchasedSkins;
+        [SerializeField]
+        private string[] planetNames;
+        private const int Price1 = 100;
+        private const int Price2 = 200;
+        private const int Price3 = 400;
+        private const int Price4 = 600;
+        private const int Price5 = 1000;
 
         private void Start()
         {
@@ -32,18 +31,16 @@ namespace Controllers
             _sprites = Resources.LoadAll<Sprite>("Textures/Planets");
             ChangeSkin(SaveController.Instance.Save.PlayerSkin);
             _purchasedSkins = SaveController.Instance.Save.PurchasedSkins;
-            for (int i = 0; i < _purchasedSkins.Count; i++)
+            for (var i = 0; i < _purchasedSkins.Count; i++)
             {
-                if (_purchasedSkins[i])
-                {
-                    buttons[i].GetComponent<Image>().sprite = _sprites[i];
-                    SetPlanetName(i);
-                }
+                if (!_purchasedSkins[i]) continue;
+                buttons[i].GetComponent<Image>().sprite = _sprites[i];
+                SetPlanetName(i);
             }
         
         }
         
-        //TODO: looks bad, probably it could be rewrote
+        //TODO: switches with identical lines looks bad, probably it could be rewrote simpler
         public void Update()
         {
             int i;
@@ -113,15 +110,15 @@ namespace Controllers
             var cost = 0;
             
             if (num < 3)
-                cost = _price1;
+                cost = Price1;
             else if (num < 6)
-                cost = _price2;
+                cost = Price2;
             else if (num == 6)
-                cost = _price3;
+                cost = Price3;
             else if (num == 7)
-                cost = _price4;
+                cost = Price4;
             else
-                cost = _price5;
+                cost = Price5;
             if (coins < cost)
                 return false;
             GameController.Instance.AddCoins(-cost, GameObject.Find("CoinsAmountText").GetComponent<Text>());
@@ -149,7 +146,8 @@ namespace Controllers
 
         private void SetPlanetName(int num)
         {
-            GameObject obj = buttons[num].transform.GetChild(0).gameObject;
+            var obj = buttons[num].transform.GetChild(0).gameObject;
+            
             obj.GetComponent<Text>().text = planetNames[num];
         }
     }

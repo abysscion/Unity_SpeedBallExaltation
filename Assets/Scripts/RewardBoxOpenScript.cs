@@ -13,11 +13,11 @@ public class RewardBoxOpenScript : MonoBehaviour
     public GameObject box2;
 
     private List<GameObject> _boxes;
-    private Text _coinsAmountText;
     private Camera _cam;
+    private Text _coinsAmountText;
     private const int RewardMin = 5;
-    private const int RewardMax = 15;
-    [SerializeField] private float _smokeOffsetZ = -1.5f;
+    private const int RewardMax = 15; 
+    private float _smokeOffsetZ = -1.5f;
     [SerializeField] private float _nextLevelDelay = 1.0f; //todo: actually instead of this should be toss coins animation length;
 
     private void Start()
@@ -82,10 +82,6 @@ public class RewardBoxOpenScript : MonoBehaviour
         GameObject.Instantiate(effectObj, effectPos, Quaternion.identity);
         box.GetComponent<Animator>().enabled = true;
         box.GetComponent<Animator>().Play("DestroyBox");
-
-        //go next button
-        // vvvvvvvvvvv
-        //load_scene(segmented_scene) || game controller state = level start
     }
 
     public void TossCoinsAnimation()
@@ -104,5 +100,3 @@ public class RewardBoxOpenScript : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 }
-
-//TODO: SkinController.cs:45 fix update method (switch-case)

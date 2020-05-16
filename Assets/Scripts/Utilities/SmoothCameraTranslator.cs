@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 
 namespace Utilities
 {
@@ -13,6 +14,7 @@ namespace Utilities
 
         private void Start()
         {
+            Debug.Assert(Camera.main != null, nameof(_cam) + "where's the hell goddamn camera?");
             _cam = Camera.main;
             _targetPoint = _cam.transform.position;
             if (timeToMove <= 0.0f) timeToMove = 1.0f;
