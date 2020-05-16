@@ -27,7 +27,7 @@ namespace Controllers
         private Vector3 _ballPullingStep;
         private Vector2 _firstTouchPos;
         private const float MagicalForceDivider = 20.0f; //idk how to name it
-        private const float MinSwipeLength = 100.0f;
+        private const float MinSwipeLength = 50.0f;
         [SerializeField] private float _defaultControlLockDelay = 0.2f;
         private float _maxSwipeLength;
         private float _jumpMultiplier;
