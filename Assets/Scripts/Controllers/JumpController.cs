@@ -10,7 +10,7 @@ namespace Controllers
         public GameObject bendingPoleTarget;
         public GameObject bendingPole;
         public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
-        public Vector3 pullEndPosition = new Vector3(0, 0.25f, -1.79f);    //experimental
+        public Vector3 pullEndPosition = new Vector3(0, 0.3f, -1.65f);    //experimental
         public float forceLimit = 14.6f;
         public float boostCenterMultiplier = 1.8f;
         public float boostMultiplier = 1.4f;
@@ -263,10 +263,15 @@ namespace Controllers
                 _jumperRb.position = _ballPositionOnTouch;
                 return;
             }
-            if (swipeLength < _maxSwipeLength)
+            if (swipeLength <= _maxSwipeLength)
             {
                 swipeLength -= MinSwipeLength;
                 _jumperRb.position = _ballPositionOnTouch + _ballPullingStep * swipeLength;
+            }
+
+            if (swipeLength > _maxSwipeLength)
+            {
+                _jumperRb.position = _ballPositionOnTouch + _ballPullingStep * (_maxSwipeLength - MinSwipeLength);
             }
         }
 

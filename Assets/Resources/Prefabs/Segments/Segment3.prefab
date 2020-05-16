@@ -29,9 +29,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8341789852764470412}
-  - {fileID: 8700548754732432689}
-  - {fileID: 8700548754491754851}
-  - {fileID: 8700548753874145983}
+  - {fileID: 8341789854101402235}
+  - {fileID: 8341789853856433705}
+  - {fileID: 8341789853247217141}
   - {fileID: 7052352663334370823}
   - {fileID: 8396268028615695097}
   m_Father: {fileID: 0}
@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   redStar: 0
   jumpBooster: 0
-  hardLevel: 2
+  hardLevel: 1
 --- !u!1 &8341789852764470413
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02da5fa7af74e3b4c969f455c24e0d80, type: 3}
---- !u!4 &8700548753874145983 stripped
+--- !u!4 &8341789853247217141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 827944703610637812, guid: 02da5fa7af74e3b4c969f455c24e0d80,
     type: 3}
@@ -460,7 +460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02da5fa7af74e3b4c969f455c24e0d80, type: 3}
---- !u!4 &8700548754491754851 stripped
+--- !u!4 &8341789853856433705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 827944703610637812, guid: 02da5fa7af74e3b4c969f455c24e0d80,
     type: 3}
@@ -540,7 +540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02da5fa7af74e3b4c969f455c24e0d80, type: 3}
---- !u!4 &8700548754732432689 stripped
+--- !u!4 &8341789854101402235 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 827944703610637812, guid: 02da5fa7af74e3b4c969f455c24e0d80,
     type: 3}

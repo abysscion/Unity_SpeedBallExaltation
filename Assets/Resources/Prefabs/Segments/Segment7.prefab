@@ -31,7 +31,7 @@ Transform:
   - {fileID: 1367090701423601863}
   - {fileID: 5838642365324093984}
   - {fileID: 2675992400356141237}
-  - {fileID: 3189527831322074214}
+  - {fileID: 1367090700619475057}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   redStar: 1
   jumpBooster: 0
-  hardLevel: 2
+  hardLevel: 1
 --- !u!1 &1367090701423601862
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +383,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e40fae3c51c934241bf244888a740ca8, type: 3}
---- !u!4 &3189527831322074214 stripped
+--- !u!4 &1367090700619475057 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4520377170476234687, guid: e40fae3c51c934241bf244888a740ca8,
     type: 3}
