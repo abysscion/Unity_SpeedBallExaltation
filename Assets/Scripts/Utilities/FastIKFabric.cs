@@ -1,9 +1,9 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
-#endif
+﻿using UnityEditor;
 using UnityEngine;
+#if UNITY_EDITOR
+#endif
 
-namespace DitzelGames.FastIK
+namespace Utilities
 {
     /// <summary>
     /// Fabrik IK Solver

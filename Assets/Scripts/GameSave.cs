@@ -20,6 +20,7 @@ public class GameSave
     public int CoinsCount
     {
         get => _coinsCount;
+        //TODO: should be private and AddCoins method from GameController could be there instead
         set => _coinsCount = value < 0 ? 0 : value;
     }
 
