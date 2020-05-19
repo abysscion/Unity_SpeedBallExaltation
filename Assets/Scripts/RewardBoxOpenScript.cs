@@ -19,6 +19,7 @@ public class RewardBoxOpenScript : MonoBehaviour
     private const int RewardMax = 15; 
     private float _smokeOffsetZ = -1.5f;
     [SerializeField] private float _nextLevelDelay = 1.0f; //todo: actually instead of this should be toss coins animation length;
+    private bool _controlLocked;
 
     private void Start()
     {
@@ -34,6 +35,8 @@ public class RewardBoxOpenScript : MonoBehaviour
     
     private void Update()
     {
+        if (_controlLocked) return;
+        
         // if (Input.touchCount > 0) //TODO: replace on release
         // {
         //  var touch = Input.GetTouch(0);
@@ -62,7 +65,9 @@ public class RewardBoxOpenScript : MonoBehaviour
                             box.GetComponent<Rotator>().enabled = false;
                             this.GetComponent<SmoothCameraTranslator>().MoveTowards(newCamPos);
                             this.GetComponent<SmoothObjectRotationResetor>().RestoreBoxRotation(box);
-                            
+
+                            //TODO: instead of control lock there could be tap-and-earn mechanic
+                            _controlLocked = true;
                             StartCoroutine(nameof(RunGiftReceivingSequence), box);
                         }
                     }
