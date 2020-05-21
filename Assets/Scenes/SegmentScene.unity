@@ -603,6 +603,11 @@ PrefabInstance:
       propertyPath: pullEndPosition.z
       value: -1.65
       objectReference: {fileID: 0}
+    - target: {fileID: 8994693945717962783, guid: 04942b26dad26f34e86f6e4d08f9bb40,
+        type: 3}
+      propertyPath: _defaultControlLockDelay
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 9043504939592250669, guid: 04942b26dad26f34e86f6e4d08f9bb40,
         type: 3}
       propertyPath: m_LocalPosition.x
