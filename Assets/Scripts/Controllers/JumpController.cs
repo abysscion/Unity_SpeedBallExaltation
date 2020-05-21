@@ -60,18 +60,25 @@ namespace Controllers
             _jumperTransform = this.transform;
             _jumperRb = this.GetComponent<Rigidbody>();
             _cameraTransform = GameObject.Find("Main Camera").transform;
+            _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
             StickBall();
         }
 
         private void Update()
         {
-            // TODO не двигать камеру вместе с оттягиванием мяча
-            if (GameController.CurrentGameState != GameController.GameState.Lose)
-                _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
-            if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall 
-                                || GameController.CurrentGameState == GameController.GameState.Menu)
+            if (!isStick && GameController.CurrentGameState != GameController.GameState.Lose)
+            {
+                if (_jumperRb.velocity.y > 0.0f)
+                {
+                    if (_jumperTransform.position.y + 1.8f >= _cameraTransform.position.y)
+                        _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+                }
+                else
+                    _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+            }
+            if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall ||
+                GameController.CurrentGameState == GameController.GameState.Menu)
                 return;
-        
             if (_metallicTimer != 0)
             {
                 _metallicTimer--;
