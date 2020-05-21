@@ -98,6 +98,9 @@ namespace Controllers
 
         private void PrepareToJump(Touch touch)
         {
+            if (GameController.CurrentGameState == GameController.GameState.Lose) 
+                return;
+            
             switch (touch.phase)
             {
                 case TouchPhase.Began:
