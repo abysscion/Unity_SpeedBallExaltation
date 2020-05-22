@@ -21,6 +21,7 @@ namespace Controllers
         public static GameState CurrentGameState;
 
         private GameState _previousGameState;
+        private GameObject _levelCounterText;
         private GameObject _chooseBallButton;
         private GameObject _coinsAmountText;
         private GameObject _restartText;
@@ -161,7 +162,8 @@ namespace Controllers
             _backButton = GameObject.Find("BackButton");
             _ballChooser = GameObject.Find("BallChooser");
             _panel = GameObject.Find("Panel");
-
+            _levelCounterText = GameObject.Find("LevelCounter");
+            
             if (!(_restartText && _menuButton && _chooseBallButton && _panel && _coinsAmountText))
             {
                 Debug.Log("[note] Check how to fix me ffs.");
@@ -177,6 +179,7 @@ namespace Controllers
             //TODO: change gameobject for components
             //TODO: adjust offset
             _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
+            _levelCounterText.GetComponent<Text>().text = "Level: " + SaveController.Instance.Save.TotalLevelsComplete;
         }
     }
 }

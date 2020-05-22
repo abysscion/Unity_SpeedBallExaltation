@@ -30,7 +30,7 @@ public class RewardBoxOpenScript : MonoBehaviour
         _cam = Camera.main;
         _boxes = new List<GameObject> {box0, box1, box2};
         _coinsAmountText = GameObject.Find("CoinsAmountText").GetComponent<Text>();
-        _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
+        _coinsAmountText.text = "" + SaveController.Instance.Save.CoinsCount;
     }
     
     private void Update()
