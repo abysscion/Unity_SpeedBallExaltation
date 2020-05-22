@@ -54,7 +54,7 @@ namespace Controllers
                 SaveController.Instance.Save.CoinsCount = newAmount;
             //TODO: change gameobject for components
             //TODO: adjust offset
-            txtComponent.text = "Coins: " + SaveController.Instance.Save.CoinsCount;
+            txtComponent.text = "" + SaveController.Instance.Save.CoinsCount;
         }
 
         private void Awake()
@@ -176,7 +176,7 @@ namespace Controllers
             _ballChooser.SetActive(false);
             //TODO: change gameobject for components
             //TODO: adjust offset
-            _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
+            _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
         }
     }
 }

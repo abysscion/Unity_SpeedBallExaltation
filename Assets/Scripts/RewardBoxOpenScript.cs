@@ -18,7 +18,7 @@ public class RewardBoxOpenScript : MonoBehaviour
     private const int RewardMin = 5;
     private const int RewardMax = 15; 
     private float _smokeOffsetZ = -1.5f;
-    [SerializeField] private float _nextLevelDelay = 1.0f; //todo: actually instead of this should be toss coins animation length;
+    [SerializeField] private float _nextLevelDelay = 2.0f; //todo: actually instead of this should be toss coins animation length;
     private bool _controlLocked;
 
     private void Start()
@@ -30,7 +30,7 @@ public class RewardBoxOpenScript : MonoBehaviour
         _cam = Camera.main;
         _boxes = new List<GameObject> {box0, box1, box2};
         _coinsAmountText = GameObject.Find("CoinsAmountText").GetComponent<Text>();
-        _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
+        _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
     }
     
     private void Update()
