@@ -9,6 +9,7 @@ public class AsteroidExploder : MonoBehaviour
 
     private List<Collider> _childrenColliders;
     private Text _txtComponent;
+    private bool _alreadyEnter = false;
 
     private void Start()
     {
@@ -25,9 +26,14 @@ public class AsteroidExploder : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag("Player") || _alreadyEnter) return;
 
-        GameController.Instance.AddCoins(1, _txtComponent);
+        _alreadyEnter = true;
+        //TODO монетки должны вылетать из метеорита, а не из центра экрана
+        GameObject canvas = GameObject.Find("UI");
+        GameObject coin = Resources.Load<GameObject>("Prefabs/Coin2d");
+        coin = Instantiate(coin, transform.position, Quaternion.identity);
+        coin.transform.SetParent(canvas.transform, false);
         Destroy(this.gameObject, destroyTimer);
         foreach (var cld in GetComponentsInChildren<Collider>())
             cld.enabled = true;
