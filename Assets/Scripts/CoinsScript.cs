@@ -7,25 +7,23 @@ using UnityEngine.UI;
 
 public class CoinsScript : MonoBehaviour
 {
-    private Vector3 _coinsTextPosition;
     private GameObject _coinsText;
-    private bool _isAlreadyDestroing = false;
+    private Vector3 _coinsTextPosition;
     private Vector3 _direction;
-    
-    // Start is called before the first frame update
-    void Start()
+    private bool _isAlreadyDestroying;
+
+    private void Start()
     {
         _coinsText = GameObject.Find("CoinsAmountText");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (transform.position.y > _coinsText.transform.position.y)
             Destroy(this.gameObject);
-        if (!_isAlreadyDestroing)
+        if (!_isAlreadyDestroying)
         {
-            _isAlreadyDestroing = !_isAlreadyDestroing;
+            _isAlreadyDestroying = !_isAlreadyDestroying;
             _direction = _coinsText.GetComponent<RectTransform>().position - GetComponent<RectTransform>().position;
         }
         

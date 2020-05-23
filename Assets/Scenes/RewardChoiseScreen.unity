@@ -529,7 +529,7 @@ MonoBehaviour:
   box0: {fileID: 86362702}
   box1: {fileID: 1546879336}
   box2: {fileID: 656366880}
-  _nextLevelDelay: 1
+  _nextLevelDelay: 2.5
 --- !u!4 &713385680
 Transform:
   m_ObjectHideFlags: 0
