@@ -28,11 +28,11 @@ namespace Controllers
         private Vector2 _firstTouchPos;
         private const float MagicalForceDivider = 20.0f; //idk how to name it
         private const float MinSwipeLength = 50.0f;
-        [SerializeField] private float _defaultControlLockDelay = 0.2f;
+        private const float DefaultControlLockDelay = 0.3f;
+        private const int MetallicBarrierPause = 12; // 2/10 секунды
         private float _maxSwipeLength;
         private float _jumpMultiplier;
         private bool _ableToControl;
-        private const int MetallicBarrierPause = 6; // 1/10 секунды
         private int _metallicTimer;
 
         public void UnstickBall()
@@ -48,7 +48,6 @@ namespace Controllers
     
         private void Start()
         {
-            // Application.targetFrameRate = 60;
             _maxSwipeLength = forceLimit * MagicalForceDivider;
             bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
             bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
@@ -60,18 +59,25 @@ namespace Controllers
             _jumperTransform = this.transform;
             _jumperRb = this.GetComponent<Rigidbody>();
             _cameraTransform = GameObject.Find("Main Camera").transform;
+            _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
             StickBall();
         }
 
         private void Update()
         {
-            // TODO не двигать камеру вместе с оттягиванием мяча
-            if (GameController.CurrentGameState != GameController.GameState.Lose)
-                _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
-            if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall 
-                                || GameController.CurrentGameState == GameController.GameState.Menu)
+            if (!isStick && GameController.CurrentGameState != GameController.GameState.Lose)
+            {
+                if (_jumperRb.velocity.y > 0.0f)
+                {
+                    if (_jumperTransform.position.y + 1.8f >= _cameraTransform.position.y)
+                        _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+                }
+                else
+                    _cameraTransform.position = new Vector3(2.5f, transform.position.y + 1.8f, -8f);
+            }
+            if (!_ableToControl || GameController.CurrentGameState == GameController.GameState.ChooseBall ||
+                GameController.CurrentGameState == GameController.GameState.Menu)
                 return;
-        
             if (_metallicTimer != 0)
             {
                 _metallicTimer--;
@@ -98,6 +104,9 @@ namespace Controllers
 
         private void PrepareToJump(Touch touch)
         {
+            if (GameController.CurrentGameState == GameController.GameState.Lose) 
+                return;
+            
             switch (touch.phase)
             {
                 case TouchPhase.Began:
@@ -223,7 +232,7 @@ namespace Controllers
     
         private IEnumerator UnlockControl()
         {
-            yield return new WaitForSecondsRealtime(_defaultControlLockDelay);
+            yield return new WaitForSecondsRealtime(DefaultControlLockDelay);
         
             _ableToControl = true;
         }
