@@ -28,11 +28,11 @@ namespace Controllers
         private Vector2 _firstTouchPos;
         private const float MagicalForceDivider = 20.0f; //idk how to name it
         private const float MinSwipeLength = 50.0f;
-        private float _defaultControlLockDelay = 0.3f;
+        private const float DefaultControlLockDelay = 0.3f;
+        private const int MetallicBarrierPause = 12; // 2/10 секунды
         private float _maxSwipeLength;
         private float _jumpMultiplier;
         private bool _ableToControl;
-        private const int MetallicBarrierPause = 12; // 2/10 секунды
         private int _metallicTimer;
 
         public void UnstickBall()
@@ -232,7 +232,7 @@ namespace Controllers
     
         private IEnumerator UnlockControl()
         {
-            yield return new WaitForSecondsRealtime(_defaultControlLockDelay);
+            yield return new WaitForSecondsRealtime(DefaultControlLockDelay);
         
             _ableToControl = true;
         }
