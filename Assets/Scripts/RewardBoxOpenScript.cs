@@ -18,7 +18,7 @@ public class RewardBoxOpenScript : MonoBehaviour
     private const int RewardMin = 5;
     private const int RewardMax = 15; 
     private float _smokeOffsetZ = -1.5f;
-    [SerializeField] private float _nextLevelDelay = 1.0f; //todo: actually instead of this should be toss coins animation length;
+    [SerializeField] private float _nextLevelDelay = 2.0f; //todo: actually instead of this should be toss coins animation length;
     private bool _controlLocked;
 
     private void Start()
@@ -30,7 +30,7 @@ public class RewardBoxOpenScript : MonoBehaviour
         _cam = Camera.main;
         _boxes = new List<GameObject> {box0, box1, box2};
         _coinsAmountText = GameObject.Find("CoinsAmountText").GetComponent<Text>();
-        _coinsAmountText.GetComponent<Text>().text = "Coins: " + SaveController.Instance.Save.CoinsCount;
+        _coinsAmountText.text = "" + SaveController.Instance.Save.CoinsCount;
     }
     
     private void Update()
@@ -92,8 +92,19 @@ public class RewardBoxOpenScript : MonoBehaviour
     public void TossCoinsAnimation()
     {
         //TODO: ILYA WILL MAKE AN ANIMATION HERE!
-        GameController.Instance.AddCoins(Random.Range(RewardMin, RewardMax), _coinsAmountText);
-        Debug.Log("Coins tossed!");
+        int coinsAmount = Random.Range(RewardMin, RewardMax);
+        // GameController.Instance.AddCoins(coinsAmount, _coinsAmountText);
+        GameObject canvas = GameObject.Find("UI");
+        GameObject coin = Resources.Load<GameObject>("Prefabs/Coin2d");
+        for (int i = 0; i < coinsAmount; i++)
+        {
+            //TODO монетки должны вылетать из метеорита, а не из центра экрана
+            Vector3 pos = new Vector3(Random.Range(transform.position.x - 100.0f, transform.position.x + 100.0f), 
+                Random.Range(transform.position.y - 100.0f, transform.position.y + 100.0f), transform.position.z);
+            coin = Instantiate(coin, pos, Quaternion.identity);
+            coin.transform.SetParent(canvas.transform, false);
+        }
+        // Debug.Log("Coins tossed!");
         StartCoroutine(nameof(GoToNextLevel));
     }
 
