@@ -126,6 +126,7 @@ namespace Controllers
                         GameController.CurrentGameState = GameController.GameState.InGame;
                     UnstickBall();
                     Jump(force);
+                    SoundController.Instance.PlaySound(SoundController.SoundName.ReleaseBendingPole);
                     break;
                 }
             }
@@ -141,6 +142,7 @@ namespace Controllers
                     case null:
                         StickBall();
                         SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
+                        SoundController.Instance.PlaySound(SoundController.SoundName.StickBendingPole);
                         break;
                     case "MetallicBarrier":
                         HitMetallicBarrier();
