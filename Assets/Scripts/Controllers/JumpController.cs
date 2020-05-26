@@ -28,8 +28,8 @@ namespace Controllers
         private Vector2 _firstTouchPos;
         private const float MagicalForceDivider = 20.0f; //idk how to name it
         private const float MinSwipeLength = 50.0f;
-        private const float DefaultControlLockDelay = 0.3f;
-        private const int MetallicBarrierPause = 12; // 2/10 секунды
+        private const float DefaultControlLockDelay = 0.2f;
+        private const int MetallicBarrierPause = 6; // 2/10 секунды
         private float _maxSwipeLength;
         private float _jumpMultiplier;
         private bool _ableToControl;
@@ -93,8 +93,10 @@ namespace Controllers
             {
                 var touch = touches[0];
                 if (GameController.CurrentGameState == GameController.GameState.Lose)
-                    if (touch.phase == TouchPhase.Began)
+                {
+                    if (touch.phase == TouchPhase.Began) 
                         GameController.Instance.RestartLevel();
+                }
                 if (isStick)
                     PrepareToJump(touch);
                 else
