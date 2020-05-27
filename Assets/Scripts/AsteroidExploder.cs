@@ -29,6 +29,7 @@ public class AsteroidExploder : MonoBehaviour
         var coin = Resources.Load<GameObject>("Prefabs/Coin2d");
         
         _alreadyEnter = true;
+        SoundController.Instance.PlaySound(SoundController.SoundName.AsteroidExplosion);
         coin = Instantiate(coin, Camera.main.WorldToScreenPoint(other.transform.position), Quaternion.identity);
         coin.transform.SetParent(GameObject.Find("UI").transform, true);
         Destroy(this.gameObject, destroyTimer);
