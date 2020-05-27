@@ -149,6 +149,7 @@ namespace Controllers
                     case "MetallicBarrier":
                         HitMetallicBarrier();
                         SomeStuffWhenBallStuck(touch.position.x, touch.position.y);
+                        SoundController.Instance.PlaySound(SoundController.SoundName.MetallicAsteroidHit);
                         break;
                     case "RedBarrier":
                         HitRedBarrier();
