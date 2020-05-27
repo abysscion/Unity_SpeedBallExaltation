@@ -52,7 +52,7 @@ namespace Controllers
                     _soundPlayer.PlayOneShot(_releaseBendingPoleSound);
                     break;
                 default:
-                    Debug.Log("THERE'S NO SOUND LIKE THIS");
+                    Debug.LogWarning("THERE'S NO SOUND LIKE THIS");
                     break;
             }
         }

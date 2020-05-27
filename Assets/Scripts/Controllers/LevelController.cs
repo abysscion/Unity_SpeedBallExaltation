@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,9 +9,13 @@ namespace Controllers
     {
         public const int DefaultSegmentsCountToUse = 4;
         public const float HalfHeight = 12.0f;
-    
+
         public static LevelController Instance { get; private set; }
         public GameObject[] AvailableSegments { get; private set; }
+
+        private List<int> _easySegments = new List<int>();
+        private List<int> _hardSegments = new List<int>();
+        private List<int> _moneySegments = new List<int>();
 
 
         public List<int> GenerateRandomIndexes()
@@ -20,11 +25,54 @@ namespace Controllers
     
         public List<int> GenerateRandomIndexes(int segmentsCount)
         {
-            //TODO выборка неповторяющихся чисел ???
+            int currentLevel = SaveController.Instance.Save.CurrentLevel;
             var indexesList = new List<int>();
+            // первые 5 уровней всегда легкие
+            if (currentLevel <= 5)
+            {
+                for (var i = 0; i < segmentsCount; i++)
+                {
+                    int b = Random.Range(0, _easySegments.Count);   
+                    indexesList.Add(_easySegments[b]);
+                }
+            }
+            // каждый 10 уровень -- "босс-уровень"
+            else if (currentLevel % 10 == 0)
+            {
+                for (var i = 0; i < segmentsCount; i++)
+                    indexesList.Add(_hardSegments[Random.Range(0, _hardSegments.Count)]);
+            }
+            // каждый 7 уровень денежный
+            else if (currentLevel % 7 == 0)
+            {
+                int normalSegments = Random.Range(1, 3);
+                int moneySegments = segmentsCount - normalSegments;
+                for (var i = 0; i < segmentsCount; i++)
+                {
+                    if (normalSegments > 0)
+                    {
+                        int a = Random.Range(0, 2);
+                        if (a == 0)
+                        {
+                            indexesList.Add(Random.Range(0, AvailableSegments.Length));
+                            normalSegments--;
+                        }
+                        else
+                        {
+                            indexesList.Add(_moneySegments[Random.Range(0, _moneySegments.Count)]);
+                            moneySegments--;
+                        }   
+                    }
+                    else
+                        indexesList.Add(_moneySegments[Random.Range(0, _moneySegments.Count)]);
+                }
+            }
+            else
+            {
+                for (var i = 0; i < segmentsCount; i++) 
+                    indexesList.Add(Random.Range(0, AvailableSegments.Length));
+            }
 
-            for (var i = 0; i < segmentsCount; i++)
-                indexesList.Add(Random.Range(0, AvailableSegments.Length));
             return indexesList;
         }
 
@@ -50,31 +98,17 @@ namespace Controllers
             }
         
             AvailableSegments = Resources.LoadAll<GameObject>("Prefabs/Segments");
+            
+            for (int i = 0; i < AvailableSegments.Length; i++)
+            {
+                int difficult = AvailableSegments[i].GetComponent<SegmentClass>().hardLevel;
+                if (difficult == 1)
+                    _easySegments.Add(i);
+                else if (difficult == 3)
+                    _hardSegments.Add(i);
+                else
+                    _moneySegments.Add(i);
+            }
         }
     }
 }
-
-/*
-        // if (num > segments.Length)
-        //     return null;
-        // int[] segmentsNum = new int[num];
-        // int maxRandom = segments.Length;
-        // int minRandom = num;
-        // int alreadyTaken = 0;
-        // for (int i = 0; i < segments.Length; i++)
-        // {
-        //     int a = Random.Range(i, maxRandom);
-        //     if (a < minRandom + i)
-        //     {
-        //         segmentsNum[alreadyTaken] = i;
-        //         maxRandom -= 1;
-        //         minRandom -= 1;
-        //         alreadyTaken += 1;
-        //     }
-        //
-        //     if (alreadyTaken == num - 1)
-        //         break;
-        // }
-        //
-        // return segmentsNum;
- */

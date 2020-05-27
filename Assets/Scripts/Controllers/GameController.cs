@@ -147,7 +147,7 @@ namespace Controllers
         private void WinLevel()
         {
             // TODO add timer
-            SaveController.Instance.Save.TotalLevelsComplete++;
+            SaveController.Instance.Save.CurrentLevel++;
             SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
             SaveController.Instance.SaveGameToFile();
             CurrentGameState = GameState.ChooseReward;
@@ -179,7 +179,7 @@ namespace Controllers
             //TODO: change gameobject for components
             //TODO: adjust offset
             _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
-            _levelCounterText.GetComponent<Text>().text = "Level: " + SaveController.Instance.Save.TotalLevelsComplete;
+            _levelCounterText.GetComponent<Text>().text = "Level: " + SaveController.Instance.Save.CurrentLevel;
         }
     }
 }
