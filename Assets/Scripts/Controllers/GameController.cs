@@ -18,8 +18,9 @@ namespace Controllers
             ChooseReward,
         }
 
+        public static GameController Instance { get; private set; }
         public static GameState CurrentGameState;
-
+        
         private GameState _previousGameState;
         private GameObject _levelCounterText;
         private GameObject _chooseBallButton;
@@ -27,20 +28,11 @@ namespace Controllers
         private GameObject _restartText;
         private GameObject _ballChooser;
         private GameObject _backButton;
-        private GameObject _menuButton;
         private GameObject _panel;
-
-        public static GameController Instance { get; private set; }
-
 
         public void RestartLevel()
         {
             SaveController.Instance.LoadGameFromFile();
-            SceneManager.LoadScene(1);
-        }
-
-        public void StartNextLevel()
-        {
             SceneManager.LoadScene(1);
         }
 
@@ -88,7 +80,6 @@ namespace Controllers
                         Time.timeScale = 1;
                         _backButton.SetActive(false);
                         _ballChooser.SetActive(false);
-                        _menuButton.SetActive(true);
                         _chooseBallButton.SetActive(true);
                         _panel.SetActive(false);
                         break;
@@ -96,14 +87,12 @@ namespace Controllers
                         Time.timeScale = 0;
                         _backButton.SetActive(true);
                         _ballChooser.SetActive(true);
-                        _menuButton.SetActive(false);
                         _chooseBallButton.SetActive(false);
                         _panel.SetActive(true);
                         break;
                     case GameState.Menu:
                         Time.timeScale = 0;
                         _backButton.SetActive(true);
-                        _menuButton.SetActive(false);
                         _chooseBallButton.SetActive(false);
                         _panel.SetActive(true);
                         break;
@@ -113,10 +102,9 @@ namespace Controllers
                         break;
                     case GameState.Win:
                         WinLevel();
-                        //play animation of smth
+                        //TODO: teleport animation
                         break;
                     case GameState.InGame:
-                        _menuButton.SetActive(false);
                         _chooseBallButton.SetActive(false);
                         break;
                     case GameState.ChooseReward:
@@ -146,7 +134,6 @@ namespace Controllers
 
         private void WinLevel()
         {
-            // TODO add timer
             SaveController.Instance.Save.CurrentLevel++;
             SaveController.Instance.Save.LevelSegmentsIndexes = LevelController.Instance.GenerateRandomIndexes();
             SaveController.Instance.SaveGameToFile();
@@ -158,25 +145,22 @@ namespace Controllers
             _chooseBallButton = GameObject.Find("ChooseBallButton");
             _coinsAmountText = GameObject.Find("CoinsAmountText");
             _restartText = GameObject.Find("RestartText");
-            _menuButton = GameObject.Find("MenuButton");
             _backButton = GameObject.Find("BackButton");
             _ballChooser = GameObject.Find("BallChooser");
             _panel = GameObject.Find("Panel");
             _levelCounterText = GameObject.Find("LevelCounter");
             
-            if (!(_restartText && _menuButton && _chooseBallButton && _panel && _coinsAmountText))
+            if (!(_restartText && _chooseBallButton && _panel && _coinsAmountText))
             {
                 Debug.Log("[note] Check how to fix me ffs.");
                 return;
             }
 
             _restartText.SetActive(false);
-            _menuButton.SetActive(true);
             _chooseBallButton.SetActive(true);
             _backButton.SetActive(false);
             _panel.SetActive(false);
             _ballChooser.SetActive(false);
-            //TODO: change gameobject for components
             //TODO: adjust offset
             _coinsAmountText.GetComponent<Text>().text = "" + SaveController.Instance.Save.CoinsCount;
             _levelCounterText.GetComponent<Text>().text = "Level: " + SaveController.Instance.Save.CurrentLevel;

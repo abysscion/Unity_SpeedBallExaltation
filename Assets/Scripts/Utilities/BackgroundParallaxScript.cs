@@ -4,11 +4,11 @@ namespace Utilities
 {
     public class BackgroundParallaxScript : MonoBehaviour
     {
-        public float parallaxSpeedX = 0.0f;
-        public float parallaxSpeedY = 1.0f;
+        public float parallaxSpeedX;
+        public float parallaxSpeedY;
         
-        private const float DefaultOffsetChange = -0.001f;
         private Material _backgroundMaterial;
+        private const float DefaultOffsetChange = -0.001f;
 
         private void Start()
         {

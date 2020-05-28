@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Controllers
 {
@@ -16,23 +15,23 @@ namespace Controllers
         public static SoundController Instance { get; private set; }
 
         private AudioSource _soundPlayer;
-        [SerializeField] private AudioClip _asteroidExplosionSound;
-        [SerializeField] private AudioClip _stickBendingPoleSound;
-        [SerializeField] private AudioClip _releaseBendingPoleSound;
-        [SerializeField] private AudioClip _metallicAsteroidHitSound;
+        [SerializeField] private AudioClip asteroidExplosion;
+        [SerializeField] private AudioClip stickBendingPole;
+        [SerializeField] private AudioClip releaseBendingPole;
+        [SerializeField] private AudioClip metallicAsteroidHit;
 
         private void Awake()
         {
             Instance = this;
             _soundPlayer = this.GetComponent<AudioSource>();
-            if (_asteroidExplosionSound == null)
-                _asteroidExplosionSound = Resources.Load<AudioClip>("AsteroidExplosion_SFX");
-            if (_metallicAsteroidHitSound == null)
-                _metallicAsteroidHitSound = Resources.Load<AudioClip>("MetallicAsteroidHit_SFX");
-            if (_stickBendingPoleSound == null)
-                _stickBendingPoleSound = Resources.Load<AudioClip>("StickBendingPoleSound_SFX");
-            if (_releaseBendingPoleSound == null)
-                _releaseBendingPoleSound = Resources.Load<AudioClip>("ReleaseBendingPoleSound_SFX");
+            if (asteroidExplosion == null)
+                asteroidExplosion = Resources.Load<AudioClip>("Sounds/AsteroidExplosion_SFX");
+            if (metallicAsteroidHit == null)
+                metallicAsteroidHit = Resources.Load<AudioClip>("Sounds/MetallicAsteroidHit_SFX");
+            if (stickBendingPole == null)
+                stickBendingPole = Resources.Load<AudioClip>("Sounds/StickBendingPole_SFX");
+            if (releaseBendingPole == null)
+                releaseBendingPole = Resources.Load<AudioClip>("Sounds/ReleaseBendingPole_SFX");
         }
 
         public void PlaySound(SoundName soundName)
@@ -40,16 +39,16 @@ namespace Controllers
             switch (soundName)
             {
                 case SoundName.AsteroidExplosion:
-                    _soundPlayer.PlayOneShot(_asteroidExplosionSound);
+                    _soundPlayer.PlayOneShot(asteroidExplosion);
                     break;
                 case SoundName.MetallicAsteroidHit:
-                    _soundPlayer.PlayOneShot(_metallicAsteroidHitSound);
+                    _soundPlayer.PlayOneShot(metallicAsteroidHit);
                     break;
                 case SoundName.StickBendingPole:
-                    _soundPlayer.PlayOneShot(_stickBendingPoleSound);
+                    _soundPlayer.PlayOneShot(stickBendingPole);
                     break;
                 case SoundName.ReleaseBendingPole:
-                    _soundPlayer.PlayOneShot(_releaseBendingPoleSound);
+                    _soundPlayer.PlayOneShot(releaseBendingPole);
                     break;
                 default:
                     Debug.LogWarning("THERE'S NO SOUND LIKE THIS");

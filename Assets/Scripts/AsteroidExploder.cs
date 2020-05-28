@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Controllers;
 using UnityEngine;
-using Text = UnityEngine.UI.Text;
 
 public class AsteroidExploder : MonoBehaviour
 {

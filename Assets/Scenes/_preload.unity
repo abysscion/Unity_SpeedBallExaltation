@@ -217,14 +217,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684bc597aed9a62458300de12540cebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _asteroidExplosionSound: {fileID: 8300000, guid: c7493ded871515142b7c66ad80524433,
-    type: 3}
-  _stickBendingPoleSound: {fileID: 8300000, guid: 3b8ed21e9384fdc45bd5295ed2991f65,
-    type: 3}
-  _releaseBendingPoleSound: {fileID: 8300000, guid: 283b63e4b20672b428295c239973059d,
-    type: 3}
-  _metallicAsteroidHitSound: {fileID: 8300000, guid: c7c5af0fc34191340bc7de81f1d6c9a6,
-    type: 3}
+  asteroidExplosionSound: {fileID: 0}
+  stickBendingPoleSound: {fileID: 0}
+  releaseBendingPoleSound: {fileID: 0}
+  metallicAsteroidHitSound: {fileID: 0}
 --- !u!82 &1051705068
 AudioSource:
   m_ObjectHideFlags: 0

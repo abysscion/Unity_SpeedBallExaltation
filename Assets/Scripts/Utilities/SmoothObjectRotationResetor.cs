@@ -17,16 +17,17 @@ namespace Utilities
 
         private void Update()
         {
-            if (!_shouldRestore) return;
+            if (!_shouldRestore)
+                return;
 
             var x = Quaternion.Angle(_targetObject.transform.rotation, Quaternion.identity);
+            
             if (x <= 0.1f)
             {
                 _shouldRestore = false;
                 _targetObject.transform.rotation = Quaternion.identity;
                 return;
             }
-
             _targetObject.transform.rotation = Quaternion.RotateTowards(_targetObject.transform.rotation,
                 Quaternion.identity, _rotationStep * Time.deltaTime);
         }
