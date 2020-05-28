@@ -16,9 +16,7 @@ public class MetallicAsteroidCollisionScript : MonoBehaviour
             jumperRb.velocity = Vector3.down * 6;
         }
         else
-        {
             jumperRb.velocity = Vector3.down * 4;
-        }
         SoundController.Instance.PlaySound(SoundController.SoundName.MetallicAsteroidHit);
     }
 }

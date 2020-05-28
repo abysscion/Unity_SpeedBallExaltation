@@ -5,9 +5,7 @@ namespace Utilities
 {
     public static class UnityScenePreloader
     {
-    
 #if UNITY_EDITOR
-
         //comment to test only one scene?
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitLoadingScene()
@@ -20,6 +18,5 @@ namespace Utilities
             SceneManager.LoadScene(0); //_preload scene should be first in scene build list!!!
         }
 #endif
-    
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using Utilities;
 using Debug = UnityEngine.Debug;
 
 namespace Controllers
@@ -9,11 +8,6 @@ namespace Controllers
     {
         public GameObject bendingPoleTarget;
         public GameObject bendingPole;
-        public Vector3 pullStartPosition = new Vector3(0, 1, -2);          //experimental
-        public Vector3 pullEndPosition = new Vector3(0, 0.3f, -1.65f);    //experimental
-        public float forceLimit = 14.6f;
-        public float boostCenterMultiplier = 1.8f;
-        public float boostMultiplier = 1.4f;
         public bool canDrawDebug;
         public bool isStick;
 
@@ -22,14 +16,19 @@ namespace Controllers
         private Transform _jumperTransform;
         private Rigidbody _jumperRb;
         private Animator _bendingPoleAnimator;
-        private Vector3 _defaultBendingPoleTargetPosition = new Vector3(0, 0, -2.0f);
         private Vector3 _ballPositionOnTouch;
         private Vector3 _ballPullingStep;
         private Vector2 _firstTouchPos;
-        private const float MagicalForceDivider = 20.0f; //idk how to name it
+        private readonly Vector3 _defaultBendingPoleTargetPosition = new Vector3(0, 0, -2.0f);
+        private readonly Vector3 _pullStartPosition = new Vector3(0, 1, -2);
+        private readonly Vector3 _pullEndPosition = new Vector3(0, 0.3f, -1.65f);
+        private const float BoostCenterMultiplier = 1.8f;
+        private const float MagicalForceDivider = 20.0f;
+        private const float ControlLockDelay = 0.2f;
+        private const float BoostMultiplier = 1.4f;
         private const float MinSwipeLength = 50.0f;
-        private const float DefaultControlLockDelay = 0.2f;
-        private const int MetallicBarrierPause = 6; // 2/10 секунды
+        private const float ForceLimit = 14.6f;
+        private const int MetallicBarrierPause = 6; //frames count
         private float _maxSwipeLength;
         private float _jumpMultiplier;
         private bool _ableToControl;
@@ -48,10 +47,10 @@ namespace Controllers
     
         private void Start()
         {
-            _maxSwipeLength = forceLimit * MagicalForceDivider;
+            _maxSwipeLength = ForceLimit * MagicalForceDivider;
             bendingPole = bendingPole == null ? GameObject.Find("BendingPole") : bendingPole;
             bendingPoleTarget = bendingPoleTarget == null ? GameObject.Find("PoleTarget") : bendingPoleTarget;
-            _ballPullingStep = (pullEndPosition - pullStartPosition) / (_maxSwipeLength - MinSwipeLength);
+            _ballPullingStep = (_pullEndPosition - _pullStartPosition) / (_maxSwipeLength - MinSwipeLength);
             _ableToControl = true;
             _bendingPoleAnimator = bendingPole.GetComponentInChildren<Animator>();
             _bendingPoleRenderer = bendingPole.GetComponentInChildren<SkinnedMeshRenderer>();
@@ -85,13 +84,13 @@ namespace Controllers
                     UnstickBall();
                 return;
             }
-            // if (Input.touchCount > 0) //TODO: replace on release
+            // var touches = InputHelper.GetTouches(); //TODO: when debug
+            // if (touches.Count > 0)
             // {
-            //  var touch = Input.GetTouch(0);
-            var touches = InputHelper.GetTouches();
-            if (touches.Count > 0)
+                // var touch = touches[0];
+            if (Input.touchCount > 0)
             {
-                var touch = touches[0];
+             var touch = Input.GetTouch(0);
                 if (GameController.CurrentGameState == GameController.GameState.Lose)
                 {
                     if (touch.phase == TouchPhase.Began) 
@@ -177,12 +176,6 @@ namespace Controllers
         {
             StickBall();
             _metallicTimer = MetallicBarrierPause;
-            //TODO: someday it could be done properly
-            // StartCoroutine(nameof(TimedUnstickControl));
-
-            //TODO: animation
-            // _jumperRb.velocity = Vector3.zero;
-            // UnstickBall();
         }
 
         private void HitJumpBooster()
@@ -191,20 +184,20 @@ namespace Controllers
             if (hitRes.transform.position.y < transform.position.y + 0.2f &&
                 hitRes.transform.position.y > transform.position.y - 0.2f)
             {
-                _jumpMultiplier = boostCenterMultiplier;
+                _jumpMultiplier = BoostCenterMultiplier;
             }
             else
             {
-                _jumpMultiplier = boostMultiplier;    
+                _jumpMultiplier = BoostMultiplier;    
             }
             StickBall();
         }
     
-        private void HitJumpBoosterCenter()
-        {
-            StickBall();
-            _jumpMultiplier = boostCenterMultiplier;
-        }
+        // private void HitJumpBoosterCenter()
+        // {
+        //     StickBall();
+        //     _jumpMultiplier = BoostCenterMultiplier;
+        // }
 
         private void Jump(float force)
         {
@@ -227,31 +220,23 @@ namespace Controllers
             _bendingPoleAnimator.Play("StickBendingPole");
             bendingPoleTarget.transform.SetParent(_jumperRb.transform);
         }
-    
-        // private IEnumerator TimedUnstickControl()
-        // {
-        //     yield return new WaitForSecondsRealtime(0.2f);
-        //     
-        //     UnstickBall();
-        // }
-    
+
         private IEnumerator UnlockControl()
         {
-            yield return new WaitForSecondsRealtime(DefaultControlLockDelay);
+            yield return new WaitForSecondsRealtime(ControlLockDelay);
         
             _ableToControl = true;
         }
 
         private void RestoreBendingPole()
         {
-            _bendingPoleRenderer.enabled = false; //TODO: change it to animation or smth like that
+            _bendingPoleRenderer.enabled = false;
             bendingPoleTarget.transform.SetParent(bendingPole.transform);
             bendingPoleTarget.transform.localPosition = _defaultBendingPoleTargetPosition;
         }
 
         private string GetHitTag()
         {
-            //TODO: rethink this someday
             if (canDrawDebug)
                 Debug.DrawRay(transform.position, Vector3.forward * 2, Color.green, 2.0f);
             if (!Physics.Raycast(transform.position, Vector3.forward, out var hitRes))
@@ -291,12 +276,11 @@ namespace Controllers
 
         private float CalculateJumpForce(float swipeLength)
         {
-            float force;
-
             if (swipeLength < MinSwipeLength)
                 return 0.0f;
-            force = swipeLength / MagicalForceDivider;
-            force = force >= forceLimit ? forceLimit : force;
+            
+            var force = swipeLength / MagicalForceDivider;
+            force = force >= ForceLimit ? ForceLimit : force;
             return force * _jumpMultiplier;
         }
 

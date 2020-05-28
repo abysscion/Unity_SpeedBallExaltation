@@ -11,14 +11,12 @@ namespace Controllers
     {
         public static string ButtonPressed;
 
-        [SerializeField]
-        private GameObject[] buttons;
+        [SerializeField] private GameObject[] buttons;
+        [SerializeField] private string[] planetNames;
         private Material[] _skins;
         private Material[] _mats;
         private Sprite[] _sprites;
         private List<bool> _purchasedSkins;
-        [SerializeField]
-        private string[] planetNames;
         private const int Price1 = 100;
         private const int Price2 = 200;
         private const int Price3 = 400;
@@ -29,15 +27,14 @@ namespace Controllers
         {
             _skins = Resources.LoadAll<Material>("Materials/Planets");
             _sprites = Resources.LoadAll<Sprite>("Textures/Planets");
-            ChangeSkin(SaveController.Instance.Save.PlayerSkin);
             _purchasedSkins = SaveController.Instance.Save.PurchasedSkins;
+            ChangeSkin(SaveController.Instance.Save.PlayerSkin);
             for (var i = 0; i < _purchasedSkins.Count; i++)
             {
                 if (!_purchasedSkins[i]) continue;
                 buttons[i].GetComponent<Image>().sprite = _sprites[i];
                 SetPlanetName(i);
             }
-        
         }
         
         //TODO: switches with identical lines looks bad, probably it could be rewrote simpler
@@ -107,7 +104,7 @@ namespace Controllers
         private bool AbleToBuy(int num)
         {
             var coins = SaveController.Instance.Save.CoinsCount;
-            var cost = 0;
+            int cost;
             
             if (num < 3)
                 cost = Price1;
@@ -127,7 +124,6 @@ namespace Controllers
 
         private void BuySkin(int num)
         {
-            // TODO animation
             _purchasedSkins[num] = true;
             SaveController.Instance.Save.PurchasedSkins = _purchasedSkins;
             buttons[num].GetComponent<Image>().sprite = _sprites[num];

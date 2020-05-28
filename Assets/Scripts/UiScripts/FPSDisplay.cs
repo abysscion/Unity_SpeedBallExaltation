@@ -4,26 +4,27 @@ namespace UiScripts
 {
     public class FPSDisplay : MonoBehaviour
     {
-        float deltaTime = 0.0f;
- 
-        void Update()
+        private float _deltaTime;
+
+        private void Update()
         {
-            deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+            _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
         }
- 
-        void OnGUI()
+
+        private void OnGUI()
         {
             int w = Screen.width, h = Screen.height;
- 
-            GUIStyle style = new GUIStyle();
- 
-            Rect rect = new Rect(w - 300, h - 70, w, h * 2 / 100);
-            style.alignment = TextAnchor.UpperLeft;
-            style.fontSize = h * 2 / 100;
-            style.normal.textColor = new Color (0.0f, 0.0f, 0.5f, 1.0f);
-            float msec = deltaTime * 1000.0f;
-            float fps = 1.0f / deltaTime;
-            string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
+            var rect = new Rect(w - 300, h - 70, w, h * 2 / 100);
+            var mSec = _deltaTime * 1000.0f;
+            var fps = 1.0f / _deltaTime;
+            var text = $"{mSec:0.0} ms ({fps:0.} fps)";
+            var style = new GUIStyle
+            {
+                alignment = TextAnchor.UpperLeft,
+                fontSize = h * 2 / 100,
+                normal = {textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f)}
+            };
+
             GUI.Label(rect, text, style);
         }
     }

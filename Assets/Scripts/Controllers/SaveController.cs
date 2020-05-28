@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 
 namespace Controllers
@@ -49,10 +48,7 @@ namespace Controllers
             if (Instance == null)
                 Instance = this;
             else
-            {
                 Debug.Log("[ATTENTION] Multiple " + this + " found!");
-                return;
-            }
         }
     }
 }

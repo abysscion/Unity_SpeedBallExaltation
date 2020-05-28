@@ -15,10 +15,10 @@ public class RewardBoxOpenScript : MonoBehaviour
     private List<GameObject> _boxes;
     private Camera _cam;
     private Text _coinsAmountText;
+    private const float NextLevelDelay = 3.0f; //todo: actually instead of this should be toss coins animation length;
+    private const float SmokeOffsetZ = -1.5f;
     private const int RewardMin = 5;
-    private const int RewardMax = 15; 
-    private float _smokeOffsetZ = -1.5f;
-    [SerializeField] private float _nextLevelDelay = 3.0f; //todo: actually instead of this should be toss coins animation length;
+    private const int RewardMax = 15;
     private bool _controlLocked;
 
     private void Start()
@@ -32,50 +32,47 @@ public class RewardBoxOpenScript : MonoBehaviour
         _coinsAmountText = GameObject.Find("CoinsAmountText").GetComponent<Text>();
         _coinsAmountText.text = "" + SaveController.Instance.Save.CoinsCount;
     }
-    
+
     private void Update()
     {
         if (_controlLocked) return;
-        
-        // if (Input.touchCount > 0) //TODO: replace on release
+
+        // var touches = InputHelper.GetTouches(); //TODO: to debug
+        // if (touches.Count > 0)
         // {
-        //  var touch = Input.GetTouch(0);
-        var touches = InputHelper.GetTouches();
-        if (touches.Count > 0)
+        //     var touch = touches[0];
+        if (Input.touchCount > 0)
         {
-            var touch = touches[0];
+            var touch = Input.GetTouch(0);
             var touchNear = _cam.ScreenToWorldPoint(
                 new Vector3(touch.position.x, touch.position.y, _cam.nearClipPlane));
             var touchFar = _cam.ScreenToWorldPoint(
                 new Vector3(touch.position.x, touch.position.y, _cam.farClipPlane));
 
-            if (touch.phase == TouchPhase.Ended)
+            if (touch.phase != TouchPhase.Ended)
+                return;
+            if (!Physics.Raycast(touchNear, touchFar - touchNear, out var hitInfo))
+                return;
+            
+            foreach (var box in _boxes)
             {
-                if (Physics.Raycast(touchNear, touchFar - touchNear, out var hitInfo))
+                if (box == hitInfo.collider.gameObject)
                 {
-                    foreach (var box in _boxes)
-                    {
-                        if (box == hitInfo.collider.gameObject)
-                        {
-                            var newCamPos = box.transform.position;
-                            var effectSpawnPos = newCamPos;
+                    var newCamPos = box.transform.position;
 
-                            newCamPos.z = -4;
-                            effectSpawnPos.z = _smokeOffsetZ;
-                            box.GetComponent<Rotator>().enabled = false;
-                            this.GetComponent<SmoothCameraTranslator>().MoveTowards(newCamPos);
-                            this.GetComponent<SmoothObjectRotationResetor>().RestoreBoxRotation(box);
+                    newCamPos.z = -4;
+                    box.GetComponent<Rotator>().enabled = false;
+                    this.GetComponent<SmoothCameraTranslator>().MoveTowards(newCamPos);
+                    this.GetComponent<SmoothObjectRotationResetor>().RestoreBoxRotation(box);
 
-                            //TODO: instead of control lock there could be tap-and-earn mechanic
-                            _controlLocked = true;
-                            StartCoroutine(nameof(RunGiftReceivingSequence), box);
-                        }
-                    }
+                    //TODO: instead of control lock there could be tap-and-earn mechanic
+                    _controlLocked = true;
+                    StartCoroutine(nameof(RunGiftReceivingSequence), box);
                 }
             }
         }
     }
-    
+
     private IEnumerator RunGiftReceivingSequence(GameObject box)
     {
         yield return new WaitForSecondsRealtime(this.GetComponent<SmoothObjectRotationResetor>().timeToRestore);
@@ -83,7 +80,7 @@ public class RewardBoxOpenScript : MonoBehaviour
         var effectObj = Resources.Load<GameObject>("Prefabs/SmokeScreenAlter");
         var effectPos = box.transform.position;
 
-        effectPos.z = _smokeOffsetZ;
+        effectPos.z = SmokeOffsetZ;
         GameObject.Instantiate(effectObj, effectPos, Quaternion.identity);
         box.GetComponent<Animator>().enabled = true;
         box.GetComponent<Animator>().Play("DestroyBox");
@@ -91,26 +88,24 @@ public class RewardBoxOpenScript : MonoBehaviour
 
     public void TossCoinsAnimation()
     {
-        //TODO: ILYA WILL MAKE AN ANIMATION HERE!
-        int coinsAmount = Random.Range(RewardMin, RewardMax);
-        // GameController.Instance.AddCoins(coinsAmount, _coinsAmountText);
-        GameObject canvas = GameObject.Find("UI");
-        GameObject coin = Resources.Load<GameObject>("Prefabs/Coin2d");
-        for (int i = 0; i < coinsAmount; i++)
+        var coinsAmount = Random.Range(RewardMin, RewardMax);
+        var canvas = GameObject.Find("UI");
+        var coin = Resources.Load<GameObject>("Prefabs/Coin2d");
+
+        for (var i = 0; i < coinsAmount; i++)
         {
-            //TODO монетки должны вылетать из метеорита, а не из центра экрана
-            Vector3 pos = new Vector3(Random.Range(transform.position.x - 100.0f, transform.position.x + 100.0f), 
-                Random.Range(transform.position.y - 100.0f, transform.position.y + 100.0f), transform.position.z);
+            var position = transform.position;
+            var pos = new Vector3(Random.Range(position.x - 100.0f, position.x + 100.0f),
+                Random.Range(position.y - 100.0f, position.y + 100.0f), position.z);
             coin = Instantiate(coin, pos, Quaternion.identity);
             coin.transform.SetParent(canvas.transform, false);
         }
-        // Debug.Log("Coins tossed!");
         StartCoroutine(nameof(GoToNextLevel));
     }
 
     private IEnumerator GoToNextLevel()
     {
-        yield return new WaitForSecondsRealtime(_nextLevelDelay);
+        yield return new WaitForSecondsRealtime(NextLevelDelay);
 
         SceneManager.sceneLoaded += GameController.Instance.SetUpLoadedScene;
         SceneManager.LoadScene(1);
