@@ -22,8 +22,7 @@ The more magnetic ray bends the more launching power will be.
 - Boxes with reward after the level completion also able to give resource.
 - Game progress saves after each level complete. Save is stored in JSON format though, simple but rough.
 
-![featureGoldenAsteroids](/Images/featureGoldenAsteroids.gif) 
-![featureMetallicAsteroids](/Images/featureMetallicAsteroids.gif)
-![featureMetallicBarrier](/Images/featureMetallicBarrier.gif)
-![featureRewardBox](/Images/featureRewardBox.gif)
-![featureSkins](/Images/featureSkins.gif)
+|   |   |    |
+| ------------ | ------------ | ------------ |
+| ![featureGoldenAsteroids](/Images/featureGoldenAsteroids.gif)   |  ![featureMetallicAsteroids](/Images/featureMetallicAsteroids.gif)  |   |
+| ![featureRewardBox](/Images/featureRewardBox.gif)  | ![featureSkins](/Images/featureSkins.gif)  | ![featureMetallicBarrier](/Images/featureMetallicBarrier.gif)  |
