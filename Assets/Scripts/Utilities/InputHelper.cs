@@ -12,7 +12,7 @@ namespace Utilities
         {
             List<Touch> touches = new List<Touch>();
             touches.AddRange(Input.touches);
-#if UNITY_EDITOR
+// #if UNITY_EDITOR
             if (lastFakeTouch == null) lastFakeTouch = new TouchCreator();
             if (Input.GetMouseButtonDown(0))
             {
@@ -42,9 +42,7 @@ namespace Utilities
                 lastFakeTouch = null;
             }
             if (lastFakeTouch != null) touches.Add(lastFakeTouch.Create());
-#endif
-
-
+// #endif
             return touches;
         }
 

@@ -37,13 +37,13 @@ public class RewardBoxOpenScript : MonoBehaviour
     {
         if (_controlLocked) return;
 
-        // var touches = InputHelper.GetTouches(); //TODO: to debug
-        // if (touches.Count > 0)
-        // {
-        //     var touch = touches[0];
-        if (Input.touchCount > 0)
+        var touches = InputHelper.GetTouches(); //TODO: to debug
+        if (touches.Count > 0)
         {
-            var touch = Input.GetTouch(0);
+            var touch = touches[0];
+        // if (Input.touchCount > 0)
+        // {
+        //     var touch = Input.GetTouch(0);
             var touchNear = _cam.ScreenToWorldPoint(
                 new Vector3(touch.position.x, touch.position.y, _cam.nearClipPlane));
             var touchFar = _cam.ScreenToWorldPoint(

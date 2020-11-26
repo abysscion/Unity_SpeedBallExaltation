@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Utilities;
 using Debug = UnityEngine.Debug;
 
 namespace Controllers
@@ -84,13 +85,13 @@ namespace Controllers
                     UnstickBall();
                 return;
             }
-            // var touches = InputHelper.GetTouches(); //TODO: when debug
-            // if (touches.Count > 0)
-            // {
-                // var touch = touches[0];
-            if (Input.touchCount > 0)
+            var touches = InputHelper.GetTouches(); //TODO: when debug
+            if (touches.Count > 0)
             {
-             var touch = Input.GetTouch(0);
+                var touch = touches[0];
+            // if (Input.touchCount > 0)
+            // {
+            //  var touch = Input.GetTouch(0);
                 if (GameController.CurrentGameState == GameController.GameState.Lose)
                 {
                     if (touch.phase == TouchPhase.Began) 

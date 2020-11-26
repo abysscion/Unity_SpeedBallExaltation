@@ -11,8 +11,8 @@ namespace Controllers
     {
         public static string ButtonPressed;
 
-        [SerializeField] private GameObject[] buttons;
-        [SerializeField] private string[] planetNames;
+        [SerializeField] private GameObject[] buttons = {};
+        [SerializeField] private string[] planetNames = {};
         private Material[] _skins;
         private Material[] _mats;
         private Sprite[] _sprites;
